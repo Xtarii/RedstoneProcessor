@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": {
+            "model": "redstoneprocessor:block/integrated_redstone_processor"
+        }
+    }
+}

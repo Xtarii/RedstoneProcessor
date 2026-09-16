@@ -1,0 +1,15 @@
+{
+  "itemGroup.redstoneprocessor": "Redstone Processor Blocks",
+  "block.redstoneprocessor.integrated_redstone_processor": "Integrated Redstone Processor",
+  "item.redstoneprocessor.integrated_redstone_processor": "Integrated Redstone Processor",
+
+
+
+  "redstoneprocessor.configuration.title": "RedstoneProcessor Configs",
+  "redstoneprocessor.configuration.section.redstoneprocessor.common.toml": "RedstoneProcessor Configs",
+  "redstoneprocessor.configuration.section.redstoneprocessor.common.toml.title": "RedstoneProcessor Configs",
+  "redstoneprocessor.configuration.items": "Item List",
+  "redstoneprocessor.configuration.logDirtBlock": "Log Dirt Block",
+  "redstoneprocessor.configuration.magicNumberIntroduction": "Magic Number Text",
+  "redstoneprocessor.configuration.magicNumber": "Magic Number"
+}

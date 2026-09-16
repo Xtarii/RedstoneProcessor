@@ -1,0 +1,6 @@
+{
+    "model": {
+        "type": "minecraft:model",
+        "model": "redstoneprocessor:item/integrated_redstone_processor"
+    }
+}
