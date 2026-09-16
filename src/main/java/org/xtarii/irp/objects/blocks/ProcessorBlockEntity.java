@@ -135,8 +135,10 @@ public class ProcessorBlockEntity extends BlockEntity {
                     short[] program = {
                         (short)0xF000,
                         (short)0xF001,
+                        (short)0xA004, // Jumps to 0xF003
                         (short)0xF002,
-                        (short)0xF003
+                        (short)0xF003,
+                        (short)0XA000, // Jumps to first line
                     };
 
                     processor.processor.load(program);

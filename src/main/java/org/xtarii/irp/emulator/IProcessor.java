@@ -59,4 +59,9 @@ public interface IProcessor {
      * Performs nothing, also known as a NOP instruction
      */
     public void doNothing();
+
+    /**
+     * Performs a jump instruction
+     */
+    public void doJump();
 }

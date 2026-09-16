@@ -24,11 +24,6 @@ public class IRP16BitProcessorEmulator implements IProcessor {
 
 
     /**
-     * Processor cycle state
-     */
-    private IProcessor.State state = IProcessor.State.FETCH;
-
-    /**
      * Processor cycle stage
      */
     private short pulse;
@@ -49,6 +44,16 @@ public class IRP16BitProcessorEmulator implements IProcessor {
      * 16 bit return address
      */
     private short ra;
+
+    /**
+     * 16 bit instruction register
+     */
+    private short ir;
+
+    /**
+     * 16 bit memory address registry
+     */
+    private short mar;
 
     /**
      * 16 bit temporary registers
@@ -81,15 +86,14 @@ public class IRP16BitProcessorEmulator implements IProcessor {
      * Creates a new redstone processor instance
      */
     public IRP16BitProcessorEmulator() {
-        state = IProcessor.State.FETCH;
         pulse = 1;
     }
 
     @Override
     public boolean load(short[] program) {
-        state = IProcessor.State.FETCH;
         pulse = 1;
-        pc = 0x0;
+        mar = pc = 0x0;
+        ra = 0x0;
 
         for(int i = 0; i < program.length; i++) {
             RAM[i] = program[i];
@@ -113,17 +117,15 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     public void processTick(short pulse) {
         switch(pulse) {
             case 1:
+                pc += 1;
                 break;
 
             case 2:
-                if(state == IProcessor.State.FETCH) {
-                    pc += 1;
-                }
+                ir = 0x0;
                 break;
 
             case 3:
-                if(state == IProcessor.State.FETCH) {
-                }
+                ir = RAM[mar];
                 break;
 
             case 4:
@@ -152,18 +154,32 @@ public class IRP16BitProcessorEmulator implements IProcessor {
 
         if(inst == 15) {
             doNothing();
+        } else if(inst == 10) {
+            doJump();
         }
     }
 
     @Override
     public byte getInstruction() {
-        short l = RAM[pc];
-        return (byte)((l & 0xF000) >> 12);
+        return (byte)((ir & 0xF000) >> 12);
     }
 
     @Override
     public void doNothing() {
-        return;
+        if(pulse == STEPS) {
+            mar = pc;
+        }
+    }
+
+    @Override
+    public void doJump() {
+        if(pulse == 6) {
+            ra = pc;
+        } else if(pulse == 7) {
+            pc = (short)(ir & 0x0FFF);
+        } else if(pulse == 8) {
+            mar = pc;
+        }
     }
 
 
@@ -174,8 +190,8 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     public void DEBUG() {
 
         System.out.printf(
-            "PC: %04x CI: %04x\n",
-            pc, RAM[pc]
+            "PC: %04x IR: %08x MAR: %04x\n",
+            pc, ir, mar
         );
 
     }
