@@ -40,6 +40,11 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     private short pulse;
 
     /**
+     * Processor cycle state
+     */
+    private State state;
+
+    /**
      * Processor RAM
      */
     private final short[] RAM = new short[RAM_LENGTH];
@@ -87,6 +92,7 @@ public class IRP16BitProcessorEmulator implements IProcessor {
      * Creates a new redstone processor instance
      */
     public IRP16BitProcessorEmulator() {
+        state = State.FETCH;
         pulse = 1;
         REG[0] = 0x0; // This will always be 0
 
@@ -102,6 +108,7 @@ public class IRP16BitProcessorEmulator implements IProcessor {
 
     @Override
     public boolean load(short[] program) {
+        state = State.FETCH;
         pulse = 1;
 
         REG[15] = 0x0;  // Sets the PC count to beginning of RAM
@@ -131,15 +138,21 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     public void processTick(short pulse) {
         switch(pulse) {
             case 1:
-                REG[15] += 1;   // PC += 1
+                if(state == State.FETCH) {
+                    REG[15] += 1;   // PC += 1
+                }
                 break;
 
             case 2:
-                REG[13] = 0x0;  // IR = 0x0
+                if(state == State.FETCH) {
+                    REG[13] = 0x0;  // IR = 0x0
+                }
                 break;
 
             case 3:
-                REG[13] = RAM[REG[14]]; // IR = RAM[MAR]
+                if(state == State.FETCH) {
+                    REG[13] = RAM[REG[14]]; // IR = RAM[MAR]
+                }
                 break;
 
             case 4:
@@ -226,18 +239,20 @@ public class IRP16BitProcessorEmulator implements IProcessor {
      * Loads byte into register
      */
     public void loadByte() {
-        if(pulse == 5) {
-            REG[14] = 0x0;  // MAR = 0
-        } else if(pulse == 6) {
-            REG[14] = (short)((REG[13] & 0x0F00) >> 8); // MAR = xRegistry
+        if(state == State.FETCH) {
 
-        } else if(pulse == 7) {
-            if(isRegisterValid(REG[REG[14]])) { // Only update if the registry is valid
-                REG[REG[14]] = (short)(REG[13] & 0x00FF);   // REG[MAR] = xValue
+            // Fetch register values from instruction
+
+            if(pulse == 7) {
+                short reg = (short)((REG[13] & 0x0F00) >> 8);
+
+                if(isRegisterValid(reg)) {
+                    REG[reg] = (short)(REG[13] & 0x00FF);
+                }
+
+            } else if(pulse == 8) {
+                REG[14] = REG[15];  // MAR = PC
             }
-
-        } else if(pulse == 8) {
-            REG[14] = REG[15];  // MAR = PC
         }
     }
 
