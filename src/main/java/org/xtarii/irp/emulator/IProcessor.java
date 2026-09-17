@@ -19,6 +19,16 @@ public interface IProcessor {
         EXECUTE,
     }
 
+    /**
+     * Processor instruction callable
+     */
+    public interface IInstruction {
+        /**
+         * Execute the instruction
+         */
+        public void execute();
+    }
+
 
 
     /**
@@ -56,12 +66,9 @@ public interface IProcessor {
     public byte getInstruction();
 
     /**
-     * Performs nothing, also known as a NOP instruction
+     * Processor error status
+     *
+     * @return Processor error status
      */
-    public void doNothing();
-
-    /**
-     * Performs a jump instruction
-     */
-    public void doJump();
+    public boolean hasError();
 }

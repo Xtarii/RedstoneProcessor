@@ -40,7 +40,7 @@ public class ProcessorBlockEntity extends BlockEntity {
     /**
      * 16 bit Integrated Redstone Processor
      */
-    private IRP16BitProcessorEmulator processor;
+    private IRP16BitProcessorEmulator emulator;
 
 
 
@@ -54,7 +54,7 @@ public class ProcessorBlockEntity extends BlockEntity {
 
         this.pid = UUID.randomUUID();
         this.power = false; // Processor is off by default
-        processor = new IRP16BitProcessorEmulator();
+        emulator = new IRP16BitProcessorEmulator();
     }
 
     @Override
@@ -133,15 +133,15 @@ public class ProcessorBlockEntity extends BlockEntity {
                 if(!processor.getPower()) {
 
                     short[] program = {
-                        (short)0xF000,
-                        (short)0xF001,
-                        (short)0xA004, // Jumps to 0xF003
-                        (short)0xF002,
-                        (short)0xF003,
+                        (short)0x0000,
+                        (short)0x0001,
+                        (short)0xA004, // Jumps to 0x0003
+                        (short)0x0002,
+                        (short)0x0003,
                         (short)0XA000, // Jumps to first line
                     };
 
-                    processor.processor.load(program);
+                    processor.emulator.load(program);
                     processor.setPower(true); // Power on processor
                 }
 
@@ -162,9 +162,9 @@ public class ProcessorBlockEntity extends BlockEntity {
      * @param processor Processor instance
      */
     public static void tick(Level level, BlockPos pos, BlockState state, ProcessorBlockEntity processor) {
-        if(!processor.getPower()) return; // Does not update of power is off
+        if(!processor.getPower() || processor.emulator.hasError()) return;
 
-        processor.processor.cycle();
-        processor.processor.DEBUG();
+        processor.emulator.cycle();
+        processor.emulator.DEBUG();
     }
 }

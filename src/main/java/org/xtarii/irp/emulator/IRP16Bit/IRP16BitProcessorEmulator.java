@@ -1,5 +1,6 @@
 package org.xtarii.irp.emulator.IRP16Bit;
 
+import org.xtarii.irp.RedstoneProcessor;
 import org.xtarii.irp.emulator.IProcessor;
 
 /**
@@ -15,6 +16,16 @@ public class IRP16BitProcessorEmulator implements IProcessor {
      * RAM Length of the 16 Bit Integrated Redstone Processor
      */
     public static final int RAM_LENGTH = 4096;
+
+    /**
+     * The amount of registers that this processor uses
+     */
+    public static final short REGISTERS = 16;
+
+    /**
+     * The amount of instructions available on this processor
+     */
+    public static final byte INSTRUCTIONS = 16;
 
     /**
      * Processor cycle steps
@@ -34,51 +45,41 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     private final short[] RAM = new short[RAM_LENGTH];
 
     /**
-     * Zero register
+     * Processor registers
      * <p>
-     * This will always be <code>0</code>
+     * 16 registers of size 16 bits.
+     * The registers are divided into
+     * groups and usage with a few not
+     * user accessible registers.
+     * <pre>
+     * x0 = 0x0         // Read-only static 0 value register
+     * x1               // Return address registry
+     *
+     * x2, x3, x4       // Temporary memory registers
+     * x5, x6, x7       // Argument registers
+     * x8, x9, x10      // Value registers, used to store return values
+     * x11              // Error register, stores an error code or 0 if no error
+     * x12              // Stack register
+     *
+     * x13              // Instruction register, processor only
+     * x14              // Memory address registry, processor only
+     * x15              // Program count, processor only
+     * </pre>
      */
-    private final short x0 = 0x0;
+    private final short[] REG = new short[REGISTERS];
 
     /**
-     * 16 bit return address
+     * Processor instructions
+     * <p>
+     * Each instruction has an <code>opcode</code>
+     * corresponding to it's index in this array.
      */
-    private short ra;
+    private final IInstruction[] INST = new IInstruction[INSTRUCTIONS];
 
     /**
-     * 16 bit instruction register
+     * Processor error status
      */
-    private short ir;
-
-    /**
-     * 16 bit memory address registry
-     */
-    private short mar;
-
-    /**
-     * 16 bit temporary registers
-     */
-    private short t0, t1, t2;
-
-    /**
-     * 16 bit argument registers
-     */
-    private short a0, a1, a2;
-
-    /**
-     * 16 bit value registers
-     */
-    private short v0, v1, v2;
-
-    /**
-     * 16 bit stack pointer
-     */
-    private short sp;
-
-    /**
-     * Program counter register
-     */
-    private short pc = 0x0;
+    private boolean error = false;
 
 
 
@@ -87,13 +88,21 @@ public class IRP16BitProcessorEmulator implements IProcessor {
      */
     public IRP16BitProcessorEmulator() {
         pulse = 1;
+        REG[0] = 0x0; // This will always be 0
+
+        // Processor instruction set
+        INST[0x0] = this::doNothing;
+        INST[0xA] = this::doJump;
     }
 
     @Override
     public boolean load(short[] program) {
         pulse = 1;
-        mar = pc = 0x0;
-        ra = 0x0;
+
+        REG[15] = 0x0;  // Sets the PC count to beginning of RAM
+        REG[14] = 0x0;  // Sets Memory Address Registry to PC
+        REG[1]  = 0x0;  // Clears the return address
+        REG[11] = 0x0;  // Clears any previous errors
 
         for(int i = 0; i < program.length; i++) {
             RAM[i] = program[i];
@@ -117,15 +126,15 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     public void processTick(short pulse) {
         switch(pulse) {
             case 1:
-                pc += 1;
+                REG[15] += 1;   // PC += 1
                 break;
 
             case 2:
-                ir = 0x0;
+                REG[13] = 0x0;  // IR = 0x0
                 break;
 
             case 3:
-                ir = RAM[mar];
+                REG[13] = RAM[REG[14]]; // IR = RAM[MAR]
                 break;
 
             case 4:
@@ -151,34 +160,48 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     @Override
     public void processInstruction(short pulse) {
         byte inst = getInstruction();
+        IInstruction instruction = INST[inst];
 
-        if(inst == 15) {
-            doNothing();
-        } else if(inst == 10) {
-            doJump();
+        if(instruction == null) {
+            RedstoneProcessor.LOGGER.warn("16-bit IRP invalid instruction %08x at %04x", REG[13], REG[14]);
+            REG[11] = 0xFFF; // Sets execution error
+            error = true;
+        } else {
+            instruction.execute();
         }
     }
 
     @Override
     public byte getInstruction() {
-        return (byte)((ir & 0xF000) >> 12);
+        return (byte)((REG[13] & 0xF000) >> 12);
     }
 
     @Override
+    public boolean hasError() {
+        return error;
+    }
+
+
+
+    /**
+     * Does nothing
+     */
     public void doNothing() {
-        if(pulse == STEPS) {
-            mar = pc;
+        if(pulse == 8) {
+            REG[14] = REG[15];  // MAR = PC
         }
     }
 
-    @Override
+    /**
+     * Does a jump
+     */
     public void doJump() {
         if(pulse == 6) {
-            ra = pc;
+            REG[1] = REG[15];   // RA = PC, stores return address
         } else if(pulse == 7) {
-            pc = (short)(ir & 0x0FFF);
+            REG[15] = (short)(REG[13] & 0x0FFF); // PC = IR & 0x0FFF
         } else if(pulse == 8) {
-            mar = pc;
+            REG[14] = REG[15];  // MAR = PC
         }
     }
 
@@ -190,8 +213,8 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     public void DEBUG() {
 
         System.out.printf(
-            "PC: %04x IR: %08x MAR: %04x\n",
-            pc, ir, mar
+            "PC: %04x IR: %08x MAR: %04x ER: %04x\n",
+            REG[15], REG[13], REG[14], REG[11]
         );
 
     }
