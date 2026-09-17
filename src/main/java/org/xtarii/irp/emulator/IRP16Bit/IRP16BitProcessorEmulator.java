@@ -23,6 +23,11 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     public static final short REGISTERS = 16;
 
     /**
+     * Processor pipeline registers
+     */
+    public static final short PIPELINE = 4;
+
+    /**
      * The amount of instructions available on this processor
      */
     public static final byte INSTRUCTIONS = 16;
@@ -72,6 +77,15 @@ public class IRP16BitProcessorEmulator implements IProcessor {
      * </pre>
      */
     private final short[] REG = new short[REGISTERS];
+
+    /**
+     * Pipeline registers
+     * <p>
+     * <pre>
+     * x0, x1, x2, x3   // Processor stage registers
+     * </pre>
+     */
+    private final short[] PIPE = new short[PIPELINE];
 
     /**
      * Processor instructions
@@ -240,6 +254,15 @@ public class IRP16BitProcessorEmulator implements IProcessor {
      */
     public void loadByte() {
         if(state == State.FETCH) {
+            if(pulse == 4) {
+                PIPE[0] = 0x0;  // Clears memory for registry
+            } else if(pulse == 5) {
+                PIPE[0] = (short)((REG[13] & 0x0F00) >> 8); // P0 = xRegistry
+            } else if(pulse == 6) {
+                state = State.EXECUTE;
+            }
+
+
 
             // Fetch register values from instruction
 
