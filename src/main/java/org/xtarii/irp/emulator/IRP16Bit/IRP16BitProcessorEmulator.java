@@ -92,6 +92,11 @@ public class IRP16BitProcessorEmulator implements IProcessor {
 
         // Processor instruction set
         INST[0x0] = this::doNothing;
+
+
+        INST[0x1] = this::loadByte;
+
+
         INST[0xA] = this::doJump;
     }
 
@@ -181,10 +186,22 @@ public class IRP16BitProcessorEmulator implements IProcessor {
         return error;
     }
 
+    /**
+     * Checks if register is valid to edit
+     *
+     * @param register Register to validate
+     * @return Register valid status
+     */
+    public boolean isRegisterValid(short register) {
+        // Register is not x0 and not x13 or above
+        return register != 0 && register < 13;
+    }
+
 
 
     /**
-     * Does nothing
+     * Does nothing, the first instruction located
+     * at 0 and callable by calling 0x0
      */
     public void doNothing() {
         if(pulse == 8) {
@@ -193,13 +210,32 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     }
 
     /**
-     * Does a jump
+     * Does a jump to a address
      */
     public void doJump() {
         if(pulse == 6) {
             REG[1] = REG[15];   // RA = PC, stores return address
         } else if(pulse == 7) {
             REG[15] = (short)(REG[13] & 0x0FFF); // PC = IR & 0x0FFF
+        } else if(pulse == 8) {
+            REG[14] = REG[15];  // MAR = PC
+        }
+    }
+
+    /**
+     * Loads byte into register
+     */
+    public void loadByte() {
+        if(pulse == 5) {
+            REG[14] = 0x0;  // MAR = 0
+        } else if(pulse == 6) {
+            REG[14] = (short)((REG[13] & 0x0F00) >> 8); // MAR = xRegistry
+
+        } else if(pulse == 7) {
+            if(isRegisterValid(REG[REG[14]])) { // Only update if the registry is valid
+                REG[REG[14]] = (short)(REG[13] & 0x00FF);   // REG[MAR] = xValue
+            }
+
         } else if(pulse == 8) {
             REG[14] = REG[15];  // MAR = PC
         }
@@ -213,8 +249,8 @@ public class IRP16BitProcessorEmulator implements IProcessor {
     public void DEBUG() {
 
         System.out.printf(
-            "PC: %04x IR: %08x MAR: %04x ER: %04x\n",
-            REG[15], REG[13], REG[14], REG[11]
+            "PC: %04x IR: %08x MAR: %04x ER: %04x $4: %04x $0: %04x\n",
+            REG[15], REG[13], REG[14], REG[11], REG[4], REG[0]
         );
 
     }

@@ -137,7 +137,10 @@ public class ProcessorBlockEntity extends BlockEntity {
                         (short)0x0001,
                         (short)0xA004, // Jumps to 0x0003
                         (short)0x0002,
-                        (short)0x0003,
+
+                        (short)0x14FF, // lb $4, 0xFF
+                        (short)0x10FF, // lb $0, 0xFF   % Invalid
+
                         (short)0XA000, // Jumps to first line
                     };
 
