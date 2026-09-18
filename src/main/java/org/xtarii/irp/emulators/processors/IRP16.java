@@ -60,7 +60,7 @@ public class IRP16 extends RCore16Bit {
 
         SEER[0] = 0x0;  // EPC = 0
         SEER[1] = 0x0;  // EEA = 0
-        SEER[3] = 0x0;  // ESR = 0
+        SEER[2] = 0x0;  // ESR = 0
 
         for(int i = 0; i < program.length; i++) {
             RAM[i] = program[i];
