@@ -133,7 +133,7 @@ public class ProcessorBlockEntity extends BlockEntity {
                 if(!processor.getPower()) {
 
                     short[] program = {
-                        (short)0x0000,
+                        (short)0x3000,
                         (short)0x0001,
                         (short)0xA004, // Jumps to 0x0003
                         (short)0x0002,
@@ -145,7 +145,7 @@ public class ProcessorBlockEntity extends BlockEntity {
                     };
 
                     processor.emulator.load(program);
-                    processor.setPower(true); // Power on processor
+                    processor.emulator.setPower(true);
                 }
 
                 UUID pid = processor.getId();
