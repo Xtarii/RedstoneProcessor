@@ -43,6 +43,17 @@ public class IRP16 extends RCore16Bit {
 
 
 
+    /**
+     * No operations instruction, 0xF
+     */
+    public void nop(Byte tick) {
+        if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
+
+
 
 
 
