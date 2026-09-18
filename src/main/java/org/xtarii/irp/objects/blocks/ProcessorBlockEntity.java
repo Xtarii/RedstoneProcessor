@@ -5,7 +5,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import org.xtarii.irp.RedstoneProcessor;
-import org.xtarii.irp.emulator.IRP16Bit.IRP16BitProcessorEmulator;
+import org.xtarii.irp.emulators.IRP16Bit.IRP16BitProcessorEmulator;
 import org.xtarii.irp.objects.Blocks;
 
 import net.minecraft.client.Minecraft;

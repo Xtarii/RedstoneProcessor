@@ -1,4 +1,4 @@
-package org.xtarii.irp.emulator;
+package org.xtarii.irp.emulators;
 
 /**
  * Base interface for all processor emulators
