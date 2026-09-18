@@ -46,6 +46,27 @@ public class IRP16 extends RCore16Bit {
 
 
 
+    public void load(short[] program) {
+        state = State.FETCH;
+        setTick((byte)1);
+
+        GPR[0] = 0x0;   // $0  = 0
+        GPR[1] = 0x0;   // $ra = 0
+
+        SPR[0] = 0x0;   // NPC = 0
+        SPR[1] = 0x0;   // IR  = 0
+        SPR[2] = 0x0;   // PPC = 0
+        SPR[3] = 0x0;   // SR  = 0
+
+        SEER[0] = 0x0;  // EPC = 0
+        SEER[1] = 0x0;  // EEA = 0
+        SEER[3] = 0x0;  // ESR = 0
+
+        for(int i = 0; i < program.length; i++) {
+            RAM[i] = program[i];
+        }
+    }
+
     public void DEBUG() {
         System.out.printf(
             "NPC: %04x PPC: %04x IR: %04x\n",

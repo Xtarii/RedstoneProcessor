@@ -15,9 +15,10 @@ package org.xtarii.irp.emulators.cores;
  * the specifications of <code>OpenRISC 1000</code>
  *
  * @param <T> Type of core
- * @param <V> Core tick pulse type
+ * @param <V> Instruction size type
+ * @param <E> Core tick pulse type
  */
-public abstract class RedstoneCore<T, V> implements IRedstoneCore<V> {
+public abstract class RedstoneCore<T, V, E> implements IRedstoneCore<E> {
     /**
      * General purpose registers
      * <p>
@@ -57,6 +58,18 @@ public abstract class RedstoneCore<T, V> implements IRedstoneCore<V> {
     protected final T[] SEER;
 
     /**
+     * Processor pipeline registers
+     * <p>
+     * The size and amount may vary from
+     * implementation to implementation.
+     * <p>
+     * These registers are used explicitly by
+     * the processor in the {@link RedstoneCore#cycle()}
+     * to store data between tick processing steps.
+     */
+    protected final T[] PPR;
+
+    /**
      * Core instructions set
      * <p>
      * The instructions and each <code>opcode</code>
@@ -70,7 +83,7 @@ public abstract class RedstoneCore<T, V> implements IRedstoneCore<V> {
     /**
      * Core cycle state
      */
-    protected final State state = State.FETCH;
+    protected State state = State.FETCH;
 
 
 
@@ -80,14 +93,24 @@ public abstract class RedstoneCore<T, V> implements IRedstoneCore<V> {
      * @param gpr General purpose registers
      * @param spr Special purpose registers
      * @param seer State execution exception registers
+     * @param ppr Processor pipeline registers
      * @param inst Core instruction set
      */
-    public RedstoneCore(T[] gpr, T[] spr, T[] seer, CoreInstruction<V>[] inst) {
+    public RedstoneCore(T[] gpr, T[] spr, T[] seer, T[] ppr, CoreInstruction<V>[] inst) {
         GPR     = gpr;
         SPR     = spr;
         SEER    = seer;
+        PPR     = ppr;
         INST    = inst;
     }
+
+    /**
+     * Gets the instruction bits from the processors
+     * current instruction processing.
+     *
+     * @return Instruction bits
+     */
+    public abstract E getInstruction();
 
 
 

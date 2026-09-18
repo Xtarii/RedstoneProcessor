@@ -13,7 +13,7 @@ import org.xtarii.irp.emulators.cores.RedstoneCore;
  * <code>GPRs</code>, where register $0 is always
  * the value 0x0.
  */
-public abstract class RCore16Bit extends RedstoneCore<Short, Byte> {
+public abstract class RCore16Bit extends RedstoneCore<Short, Byte, Byte> {
     /**
      * General purpose registers
      * <p>
@@ -50,6 +50,15 @@ public abstract class RCore16Bit extends RedstoneCore<Short, Byte> {
         0x0,    // ESR - Exception supervision register
     };
 
+    /**
+     * Processor pipeline registers
+     * <p>
+     * This is a constructor specific object
+     * used in the {@link #RCore16Bit()} constructor
+     * to implement the <code>PPRs</code>
+     */
+    public static final Short[] PPR = new Short[4];
+
 
 
     /**
@@ -65,7 +74,7 @@ public abstract class RCore16Bit extends RedstoneCore<Short, Byte> {
      * @param instructions Core instruction set
      */
     public RCore16Bit(CoreInstruction<Byte>[] instructions) {
-        super(GPR, SPR, SEER, instructions);
+        super(GPR, SPR, SEER, PPR, instructions);
         GPR[0] = 0x0; // Sets the GPR 0 to 0x0
         tick = 1;
     }
@@ -79,9 +88,27 @@ public abstract class RCore16Bit extends RedstoneCore<Short, Byte> {
 
             // Run instruction
 
+            System.out.println("\nINST: " + getInstruction() + "\n");
+
             tick++;
         } else {
             tick = 1; // Resets tick cycle
         }
+    }
+
+    @Override
+    public Byte getInstruction() {
+        return (byte)((SPR[1] & 0xF000) >> 12);
+    }
+
+
+
+    /**
+     * Sets the processor clock pulse tick
+     *
+     * @param tick New pulse tick
+     */
+    protected void setTick(byte tick) {
+        this.tick = tick;
     }
 }
