@@ -36,8 +36,6 @@ public class IRP16 extends RCore16Bit {
                     SPR[1] = RAM[SPR[2]];   // IR = RAM[PPC]
                 }
                 break;
-            case 3:
-                break;
             default:
                 break;
         }
