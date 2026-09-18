@@ -52,6 +52,13 @@ public class RCore16Bit extends RedstoneCore<Short, Byte> {
 
 
     /**
+     * Processor cycle tick
+     */
+    private byte tick;
+
+
+
+    /**
      * Creates a 16 bit redstone processor core
      *
      * @param instructions Core instruction set
@@ -59,5 +66,19 @@ public class RCore16Bit extends RedstoneCore<Short, Byte> {
     public RCore16Bit(CoreInstruction<Byte>[] instructions) {
         super(GPR, SPR, SEER, instructions);
         GPR[0] = 0x0; // Sets the GPR 0 to 0x0
+        tick = 1;
+    }
+
+
+
+    @Override
+    public void cycle() {
+        if(tick <= 8) { // Makes a maximum of 8 ticks per cycle
+
+            //
+
+        } else {
+            tick = 1; // Resets tick cycle
+        }
     }
 }

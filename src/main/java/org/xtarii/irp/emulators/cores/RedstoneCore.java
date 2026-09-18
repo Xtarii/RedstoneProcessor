@@ -17,7 +17,7 @@ package org.xtarii.irp.emulators.cores;
  * @param <T> Type of core
  * @param <V> Core tick pulse type
  */
-public abstract class RedstoneCore<T, V> {
+public abstract class RedstoneCore<T, V> implements IRedstoneCore {
     /**
      * General purpose registers
      * <p>
