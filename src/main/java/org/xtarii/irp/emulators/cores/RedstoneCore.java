@@ -17,7 +17,7 @@ package org.xtarii.irp.emulators.cores;
  * @param <T> Type of core
  * @param <V> Core tick pulse type
  */
-public abstract class RedstoneCore<T, V> implements IRedstoneCore {
+public abstract class RedstoneCore<T, V> implements IRedstoneCore<V> {
     /**
      * General purpose registers
      * <p>
@@ -67,8 +67,21 @@ public abstract class RedstoneCore<T, V> implements IRedstoneCore {
      */
     protected final CoreInstruction<V>[] INST;
 
+    /**
+     * Core cycle state
+     */
+    protected final State state = State.FETCH;
 
 
+
+    /**
+     * Constructs a redstone processor core
+     *
+     * @param gpr General purpose registers
+     * @param spr Special purpose registers
+     * @param seer State execution exception registers
+     * @param inst Core instruction set
+     */
     public RedstoneCore(T[] gpr, T[] spr, T[] seer, CoreInstruction<V>[] inst) {
         GPR     = gpr;
         SPR     = spr;
@@ -97,5 +110,20 @@ public abstract class RedstoneCore<T, V> implements IRedstoneCore {
          * @param tick Processor pulse tick
          */
         public void execute(T tick);
+    }
+
+    /**
+     * Redstone processor cycle state
+     */
+    public static enum State {
+        /**
+         * Fetch state
+         */
+        FETCH,
+
+        /**
+         * Execute state
+         */
+        EXECUTE,
     }
 }

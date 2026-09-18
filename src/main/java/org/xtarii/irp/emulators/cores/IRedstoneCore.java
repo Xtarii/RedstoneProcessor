@@ -6,8 +6,10 @@ package org.xtarii.irp.emulators.cores;
  * This provides the core with a set of
  * base methods used when running the
  * processor.
+ *
+ * @param <T> Processor cycle tick type
  */
-public interface IRedstoneCore {
+public interface IRedstoneCore<T> {
     /**
      * Preforms a processor cycle tick
      * <p>
@@ -19,4 +21,11 @@ public interface IRedstoneCore {
      * {@link #cycle()} at which point it precedes.
      */
     public void cycle();
+
+    /**
+     * Processes the current cycle tick
+     *
+     * @param tick Pulse tick
+     */
+    public void processTick(T tick);
 }

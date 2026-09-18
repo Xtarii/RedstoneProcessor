@@ -13,7 +13,7 @@ import org.xtarii.irp.emulators.cores.RedstoneCore;
  * <code>GPRs</code>, where register $0 is always
  * the value 0x0.
  */
-public class RCore16Bit extends RedstoneCore<Short, Byte> {
+public abstract class RCore16Bit extends RedstoneCore<Short, Byte> {
     /**
      * General purpose registers
      * <p>
@@ -32,6 +32,7 @@ public class RCore16Bit extends RedstoneCore<Short, Byte> {
      */
     public static final Short[] SPR = {
         0x0,    // NPC - Next program count
+        0x0,    // IR  - Instruction register
         0x0,    // PPC - Previous program count
         0x0,    // SR  - Supervision register, processor status
     };
@@ -74,9 +75,11 @@ public class RCore16Bit extends RedstoneCore<Short, Byte> {
     @Override
     public void cycle() {
         if(tick <= 8) { // Makes a maximum of 8 ticks per cycle
+            processTick(tick);
 
-            //
+            // Run instruction
 
+            tick++;
         } else {
             tick = 1; // Resets tick cycle
         }

@@ -5,7 +5,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import org.xtarii.irp.RedstoneProcessor;
-import org.xtarii.irp.emulators.IRP16Bit.IRP16BitProcessorEmulator;
+import org.xtarii.irp.emulators.processors.IRP16;
 import org.xtarii.irp.objects.Blocks;
 
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class ProcessorBlockEntity extends BlockEntity {
     /**
      * 16 bit Integrated Redstone Processor
      */
-    private IRP16BitProcessorEmulator emulator;
+    private IRP16 emulator;
 
 
 
@@ -54,7 +54,7 @@ public class ProcessorBlockEntity extends BlockEntity {
 
         this.pid = UUID.randomUUID();
         this.power = false; // Processor is off by default
-        emulator = new IRP16BitProcessorEmulator();
+        emulator = new IRP16();
     }
 
     @Override
@@ -132,19 +132,19 @@ public class ProcessorBlockEntity extends BlockEntity {
 
                 if(!processor.getPower()) {
 
-                    short[] program = {
-                        (short)0x0000,
-                        (short)0x0001,
-                        (short)0xA004, // Jumps to 0x0003
-                        (short)0x0002,
+                    // short[] program = {
+                    //     (short)0x0000,
+                    //     (short)0x0001,
+                    //     (short)0xA004, // Jumps to 0x0003
+                    //     (short)0x0002,
 
-                        (short)0x14FF, // lb $4, 0xFF
-                        (short)0x10FF, // lb $0, 0xFF   % Invalid
+                    //     (short)0x14FF, // lb $4, 0xFF
+                    //     (short)0x10FF, // lb $0, 0xFF   % Invalid
 
-                        (short)0XA000, // Jumps to first line
-                    };
+                    //     (short)0XA000, // Jumps to first line
+                    // };
 
-                    processor.emulator.load(program);
+                    // processor.emulator.load(program);
                     processor.setPower(true); // Power on processor
                 }
 
@@ -165,7 +165,7 @@ public class ProcessorBlockEntity extends BlockEntity {
      * @param processor Processor instance
      */
     public static void tick(Level level, BlockPos pos, BlockState state, ProcessorBlockEntity processor) {
-        if(!processor.getPower() || processor.emulator.hasError()) return;
+        if(!processor.getPower()) return;
 
         processor.emulator.cycle();
         processor.emulator.DEBUG();
