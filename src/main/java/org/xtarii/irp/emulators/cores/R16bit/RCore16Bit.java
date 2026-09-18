@@ -1,5 +1,6 @@
 package org.xtarii.irp.emulators.cores.R16bit;
 
+import org.xtarii.irp.RedstoneProcessor;
 import org.xtarii.irp.emulators.cores.RedstoneCore;
 
 /**
@@ -66,6 +67,15 @@ public abstract class RCore16Bit extends RedstoneCore<Short, Byte, Byte> {
      */
     private byte tick;
 
+    /**
+     * Processor power status
+     * <p>
+     * This determines if the processor
+     * has any power and thus if it will
+     * run any instructions.
+     */
+    protected boolean power = false;
+
 
 
     /**
@@ -83,16 +93,27 @@ public abstract class RCore16Bit extends RedstoneCore<Short, Byte, Byte> {
 
     @Override
     public void cycle() {
+        if(!power) return; // Ignores off-power processors
+
         if(tick <= 8) { // Makes a maximum of 8 ticks per cycle
             processTick(tick);
-
-            // Run instruction
-
-            System.out.println("\nINST: " + getInstruction() + "\n");
-
+            processInstruction(tick);
             tick++;
         } else {
             tick = 1; // Resets tick cycle
+        }
+    }
+
+    @Override
+    public void processInstruction(Byte tick) {
+        byte inst = getInstruction();
+        CoreInstruction<Byte> ci = INST[inst];
+
+        if(ci == null) {
+            RedstoneProcessor.LOGGER.warn("No instruction %04x", inst);
+            power = false;
+        } else {
+            ci.execute(tick);
         }
     }
 
@@ -110,5 +131,23 @@ public abstract class RCore16Bit extends RedstoneCore<Short, Byte, Byte> {
      */
     protected void setTick(byte tick) {
         this.tick = tick;
+    }
+
+    /**
+     * Get the processor power status
+     *
+     * @return Power status
+     */
+    public boolean getPower() {
+        return this.power;
+    }
+
+    /**
+     * Sets the processor power status
+     *
+     * @param power New power status
+     */
+    public void setPower(boolean power) {
+        this.power = power;
     }
 }
