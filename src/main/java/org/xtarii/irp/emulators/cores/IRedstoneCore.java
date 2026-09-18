@@ -28,4 +28,11 @@ public interface IRedstoneCore<T> {
      * @param tick Pulse tick
      */
     public void processTick(T tick);
+
+    /**
+     * Processes the current instruction
+     *
+     * @param tick Pulse tick
+     */
+    public void processInstruction(T tick);
 }
