@@ -1,4 +1,4 @@
-package org.xtarii.irp.emulators.cores;
+package org.xtarii.irp.emulators.o_cores;
 
 /**
  * Redstone processor core

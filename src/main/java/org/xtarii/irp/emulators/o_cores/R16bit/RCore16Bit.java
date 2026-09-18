@@ -1,7 +1,7 @@
-package org.xtarii.irp.emulators.cores.R16bit;
+package org.xtarii.irp.emulators.o_cores.R16bit;
 
 import org.xtarii.irp.RedstoneProcessor;
-import org.xtarii.irp.emulators.cores.RedstoneCore;
+import org.xtarii.irp.emulators.o_cores.RedstoneCore;
 
 /**
  * Redstone 16 bit core

@@ -1,6 +1,6 @@
 package org.xtarii.irp.emulators.processors;
 
-import org.xtarii.irp.emulators.cores.R16bit.RCore16Bit;
+import org.xtarii.irp.emulators.o_cores.R16bit.RCore16Bit;
 
 /**
  * Integrated redstone processor model 16 bit

@@ -1,4 +1,4 @@
-package org.xtarii.irp.emulators.IRP16Bit;
+package org.xtarii.irp.emulators.o_IRP16Bit;
 
 import org.xtarii.irp.RedstoneProcessor;
 import org.xtarii.irp.emulators.IProcessor;
