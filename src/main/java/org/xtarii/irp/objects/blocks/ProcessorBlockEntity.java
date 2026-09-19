@@ -133,15 +133,20 @@ public class ProcessorBlockEntity extends BlockEntity {
                 if(!processor.getPower()) {
 
                     short[] program = {
-                        (short)0x3000,
-                        (short)0x0001,
-                        (short)0xA004, // Jumps to 0x0003
-                        (short)0x0002,
+                        (short)0xF000,
+                        (short)0xF001,
+                        (short)0x0004, // Jumps to 0xF003
+                        (short)0xF002,
 
-                        (short)0x14FF, // lb $4, 0xFF
-                        (short)0x10FF, // lb $0, 0xFF   % Invalid
+                        (short)0xF003,
+                        (short)0x1050, // Jumps to start of program ( r5 = 0x0000 )
 
-                        (short)0XA000, // Jumps to first line
+
+
+                        // (short)0xF4FF, // lb $4, 0xFF
+                        (short)0xF0FF, // lb $0, 0xFF   % Invalid
+
+                        (short)0XF000, // Jumps to first line
                     };
 
                     processor.emulator.load(program);

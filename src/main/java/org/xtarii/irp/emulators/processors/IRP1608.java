@@ -24,6 +24,7 @@ public class IRP1608 extends RCore1608 {
         Instruction[] inst = new Instruction[16];
 
         inst[0x0] = this::jump;
+        inst[0x1] = this::jumpRegister;
 
         inst[0xF] = this::nop;
 
@@ -91,6 +92,19 @@ public class IRP1608 extends RCore1608 {
         }
     }
 
+    /**
+     * Jump to register instruction
+     */
+    private void jumpRegister(byte tick) {
+        if(tick == 6) {
+            PPR[0] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx0 = rB
+        } else if(tick == 7) {
+            SPR[0] = GPR[PPR[0]];   // NPC = rB
+        } else if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
 
 
 
@@ -102,8 +116,8 @@ public class IRP1608 extends RCore1608 {
 
     public void DEBUG() {
         System.out.printf(
-            "NPC: %04x PPC: %04x IR: %04x\n",
-            SPR[0], SPR[2], SPR[1]
+            "NPC: %04x PPC: %04x IR: %04x RA: %04x\n",
+            SPR[0], SPR[2], SPR[1], GPR[1]
         );
     }
 }
