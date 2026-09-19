@@ -202,7 +202,7 @@ public abstract class RCore1608 {
      *
      * @return Power status
      */
-    protected boolean getPower() {
+    public boolean getPower() {
         return this.power;
     }
 
@@ -211,7 +211,7 @@ public abstract class RCore1608 {
      *
      * @param power New power status
      */
-    protected void setPower(boolean power) {
+    public void setPower(boolean power) {
         this.power = power;
     }
 

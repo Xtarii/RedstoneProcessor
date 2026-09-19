@@ -5,7 +5,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import org.xtarii.irp.RedstoneProcessor;
-import org.xtarii.irp.emulators.o_processors.IRP16;
+import org.xtarii.irp.emulators.processors.IRP1608;
 import org.xtarii.irp.objects.Blocks;
 
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class ProcessorBlockEntity extends BlockEntity {
     /**
      * 16 bit Integrated Redstone Processor
      */
-    private IRP16 emulator;
+    private IRP1608 emulator;
 
 
 
@@ -54,7 +54,7 @@ public class ProcessorBlockEntity extends BlockEntity {
 
         this.pid = UUID.randomUUID();
         this.power = false; // Processor is off by default
-        emulator = new IRP16();
+        emulator = new IRP1608();
     }
 
     @Override
@@ -168,6 +168,6 @@ public class ProcessorBlockEntity extends BlockEntity {
         if(!processor.getPower()) return;
 
         processor.emulator.cycle();
-        processor.emulator.DEBUG();
+        // processor.emulator.DEBUG();
     }
 }
