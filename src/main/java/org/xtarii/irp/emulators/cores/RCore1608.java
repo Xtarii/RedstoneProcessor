@@ -112,7 +112,7 @@ public abstract class RCore1608 {
         byte inst = getInstruction();
         Instruction instruction = INST[inst];
         if(instruction == null) {
-            RedstoneProcessor.LOGGER.warn("Instruction, %04x, does not exist", inst);
+            RedstoneProcessor.LOGGER.warn("Instruction, {}, does not exist", inst);
             power = false;  // Stops the processor
         } else {
             instruction.execute(tick);

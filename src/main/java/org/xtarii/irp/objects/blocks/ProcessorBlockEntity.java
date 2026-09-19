@@ -165,9 +165,9 @@ public class ProcessorBlockEntity extends BlockEntity {
      * @param processor Processor instance
      */
     public static void tick(Level level, BlockPos pos, BlockState state, ProcessorBlockEntity processor) {
-        if(!processor.getPower()) return;
+        if(!processor.emulator.getPower()) return;
 
         processor.emulator.cycle();
-        // processor.emulator.DEBUG();
+        processor.emulator.DEBUG();
     }
 }

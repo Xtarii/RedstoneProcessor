@@ -73,4 +73,16 @@ public class IRP1608 extends RCore1608 {
             SPR[2] = SPR[0];    // PPC = NPC
         }
     }
+
+
+
+
+
+
+    public void DEBUG() {
+        System.out.printf(
+            "NPC: %04x PPC: %04x IR: %04x\n",
+            SPR[0], SPR[2], SPR[1]
+        );
+    }
 }
