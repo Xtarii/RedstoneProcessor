@@ -25,6 +25,7 @@ public class IRP1608 extends RCore1608 {
 
         inst[0x0] = this::jump;
         inst[0x1] = this::jumpRegister;
+        inst[0x2] = this::loadImmediate;
 
         inst[0xF] = this::nop;
 
@@ -100,6 +101,21 @@ public class IRP1608 extends RCore1608 {
             PPR[0] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx0 = rB
         } else if(tick == 7) {
             SPR[0] = GPR[PPR[0]];   // NPC = rB
+        } else if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
+    /**
+     * Loads immediate instruction
+     */
+    private void loadImmediate(byte tick) {
+        if(tick == 5) {
+            PPR[0] = (short)(SPR[1] & 0x0F00 >> 8); // PPRx0 = rB
+        } else if(tick == 6) {
+            PPR[1] = (short)(SPR[1] & 0x00FF);  // PPRx1 = immediate
+        } else if(tick == 7) {
+            GPR[PPR[0]] = PPR[1];   // rB = immediate
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
         }
