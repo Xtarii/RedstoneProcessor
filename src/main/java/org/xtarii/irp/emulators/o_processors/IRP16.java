@@ -1,4 +1,4 @@
-package org.xtarii.irp.emulators.processors;
+package org.xtarii.irp.emulators.o_processors;
 
 import org.xtarii.irp.emulators.o_cores.R16bit.RCore16Bit;
 
