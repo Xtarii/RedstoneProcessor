@@ -17,6 +17,11 @@ public abstract class RCore1608 {
 
     /**
      * 16 bit general purpose registers
+     * <p>
+     * <pre>
+     * x0 = 0x0 // Always zero
+     * x1 = ra  // Return address
+     * </pre>
      */
     protected final short[] GPR = new short[0xF];
 
@@ -113,7 +118,6 @@ public abstract class RCore1608 {
         Instruction instruction = INST[inst];
         if(instruction == null) {
             RedstoneProcessor.LOGGER.warn("Instruction, {}, does not exist", inst);
-            power = false;  // Stops the processor
         } else {
             instruction.execute(tick);
         }

@@ -23,6 +23,8 @@ public class IRP1608 extends RCore1608 {
 
         Instruction[] inst = new Instruction[16];
 
+        inst[0x0] = this::jump;
+
         inst[0xF] = this::nop;
 
         try {
@@ -73,6 +75,25 @@ public class IRP1608 extends RCore1608 {
             SPR[2] = SPR[0];    // PPC = NPC
         }
     }
+
+    /**
+     * Jump instruction
+     */
+    private void jump(byte tick) {
+        if(tick == 5) {
+            GPR[1] = SPR[0];    // RA = NPC
+        } else if(tick == 6) {
+            PPR[0] = (short)(SPR[1] & 0x0FFF);  // PPRx0 = JMP address
+        } else if(tick == 7) {
+            SPR[0] = PPR[0];    // NPC = PPRx0
+        } else if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
+
+
+
 
 
 
