@@ -138,6 +138,8 @@ public class ProcessorBlockEntity extends BlockEntity {
                         (short)0x0004, // Jumps to 0xF003
                         (short)0xF002,
 
+                        (short)0x24FF, // li $4, 0xFF
+
                         (short)0xF003,
                         (short)0x1050, // Jumps to start of program ( r5 = 0x0000 )
 

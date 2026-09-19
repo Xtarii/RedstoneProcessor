@@ -111,7 +111,7 @@ public class IRP1608 extends RCore1608 {
      */
     private void loadImmediate(byte tick) {
         if(tick == 5) {
-            PPR[0] = (short)(SPR[1] & 0x0F00 >> 8); // PPRx0 = rB
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8); // PPRx0 = rB
         } else if(tick == 6) {
             PPR[1] = (short)(SPR[1] & 0x00FF);  // PPRx1 = immediate
         } else if(tick == 7) {
@@ -132,8 +132,8 @@ public class IRP1608 extends RCore1608 {
 
     public void DEBUG() {
         System.out.printf(
-            "NPC: %04x PPC: %04x IR: %04x RA: %04x\n",
-            SPR[0], SPR[2], SPR[1], GPR[1]
+            "NPC: %04x PPC: %04x IR: %04x RA: %04x $4: %04x\n",
+            SPR[0], SPR[2], SPR[1], GPR[1], GPR[4]
         );
     }
 }
