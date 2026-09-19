@@ -27,6 +27,8 @@ public class IRP1608 extends RCore1608 {
         inst[0x1] = this::jumpRegister;
         inst[0x2] = this::loadImmediate;
 
+        inst[0x3] = this::add;
+
         inst[0xF] = this::nop;
 
         try {
@@ -118,6 +120,16 @@ public class IRP1608 extends RCore1608 {
             GPR[PPR[0]] = PPR[1];   // rB = immediate
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
+    /**
+     * Add instruction
+     */
+    private void add(byte tick) {
+        if(state == State.FETCH) {
+            if(tick == 5) {
+            }
         }
     }
 
