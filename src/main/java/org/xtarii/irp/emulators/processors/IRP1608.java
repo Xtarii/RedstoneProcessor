@@ -51,18 +51,7 @@ public class IRP1608 extends RCore1608 {
 
         state = State.FETCH;
         resetTick();
-
-        GPR[0] = 0x0;   // $0 = 0
-        GPR[1] = 0x0;   // ra = 0
-
-        SPR[0] = 0x0;   // NPC = 0
-        SPR[1] = 0x0;   // IR  = 0
-        SPR[2] = 0x0;   // PPC = 0
-        SPR[3] = 0x0;   // SR  = 0
-
-        SER[0] = 0x0;  // EPC = 0
-        SER[1] = 0x0;  // EEA = 0
-        SER[2] = 0x0;  // ESR = 0
+        resetRegisters();
 
         for(int i = 0; i < program.length; i++) {
             RAM[i] = program[i];
