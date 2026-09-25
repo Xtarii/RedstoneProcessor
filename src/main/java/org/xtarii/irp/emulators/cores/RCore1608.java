@@ -86,6 +86,27 @@ public abstract class RCore1608 {
 
 
     /**
+     * Resets registers
+     * <p>
+     * This will reset the values on
+     * all registers that require their
+     * value be specified by program start.
+     */
+    public void resetRegisters() {
+        GPR[0] = 0x0;   // $0 = 0
+        GPR[1] = 0x0;   // ra = 0
+
+        SPR[0] = 0x0;   // NPC = 0
+        SPR[1] = 0x0;   // IR  = 0
+        SPR[2] = 0x0;   // PPC = 0
+        SPR[3] = 0x0;   // SR  = 0
+
+        SER[0] = 0x0;  // EPC = 0
+        SER[1] = 0x0;  // EEA = 0
+        SER[2] = 0x0;  // ESR = 0
+    }
+
+    /**
      * Updates the processor
      * <p>
      * Goes through one tick of the processor
