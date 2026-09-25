@@ -86,9 +86,7 @@ public class IRP1608 extends RCore1608 {
      * Jump instruction
      */
     private void jump(byte tick) {
-        if(tick == 5) {
-            GPR[1] = SPR[0];    // RA = NPC
-        } else if(tick == 6) {
+        if(tick == 6) {
             PPR[0] = (short)(SPR[1] & 0x0FFF);  // PPRx0 = JMP address
         } else if(tick == 7) {
             SPR[0] = PPR[0];    // NPC = PPRx0
