@@ -62,14 +62,7 @@ public class IRP1608 extends RCore1608 {
 
 
 
-    /**
-     * No operation instruction
-     */
-    private void nop(byte tick) {
-        if(tick == 8) {
-            SPR[2] = SPR[0];    // PPC = NPC
-        }
-    }
+
 
     /**
      * Jump instruction
@@ -108,21 +101,6 @@ public class IRP1608 extends RCore1608 {
     }
 
     /**
-     * Loads immediate instruction
-     */
-    private void loadImmediate(byte tick) {
-        if(tick == 5) {
-            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8); // PPRx0 = rB
-        } else if(tick == 6) {
-            PPR[1] = (short)(SPR[1] & 0x00FF);  // PPRx1 = immediate
-        } else if(tick == 7 && PPR[0] != 0x0) {
-            GPR[PPR[0]] = PPR[1];   // rB = immediate
-        } else if(tick == 8) {
-            SPR[2] = SPR[0];    // PPC = NPC
-        }
-    }
-
-    /**
      * Add instruction
      */
     private void add(byte tick) {
@@ -148,6 +126,30 @@ public class IRP1608 extends RCore1608 {
             } else if(tick == 8) {
                 state = State.FETCH;    // Switches back to fetch mode
             }
+        }
+    }
+
+    /**
+     * Loads immediate instruction
+     */
+    private void loadImmediate(byte tick) {
+        if(tick == 5) {
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8); // PPRx0 = rB
+        } else if(tick == 6) {
+            PPR[1] = (short)(SPR[1] & 0x00FF);  // PPRx1 = immediate
+        } else if(tick == 7 && PPR[0] != 0x0) {
+            GPR[PPR[0]] = PPR[1];   // rB = immediate
+        } else if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
+    /**
+     * No operation instruction
+     */
+    private void nop(byte tick) {
+        if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
         }
     }
 
