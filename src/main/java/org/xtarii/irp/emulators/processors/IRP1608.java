@@ -29,7 +29,7 @@ public class IRP1608 extends RCore1608 {
 
         inst[0x3] = this::loadImmediate;
 
-        inst[0x4] = this::add;
+        inst[0x5] = this::add;
 
         inst[0xF] = this::nop;
 
