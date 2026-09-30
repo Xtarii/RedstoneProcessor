@@ -115,7 +115,7 @@ public class IRP1608 extends RCore1608 {
             PPR[0] = (short)((SPR[1] & 0x0F00) >> 8); // PPRx0 = rB
         } else if(tick == 6) {
             PPR[1] = (short)(SPR[1] & 0x00FF);  // PPRx1 = immediate
-        } else if(tick == 7) {
+        } else if(tick == 7 && PPR[0] != 0x0) {
             GPR[PPR[0]] = PPR[1];   // rB = immediate
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
@@ -128,6 +128,25 @@ public class IRP1608 extends RCore1608 {
     private void add(byte tick) {
         if(state == State.FETCH) {
             if(tick == 5) {
+                PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rR
+            } else if(tick == 6) {
+                PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
+            } else if(tick == 7) {
+                PPR[2] = (short)((SPR[1] & 0x000F));    // PPRx2 = rB
+            } else if(tick == 8) {
+                state = State.EXECUTE;  // Switches to execute
+            }
+        } else {
+            if(tick == 1) {
+                GMR[0] = (int)(GPR[PPR[1]] + GPR[PPR[2]]);    // GMRx0 = rA + rB
+            } else if(tick == 2 && PPR[0] != 0x0) {
+                GPR[PPR[0]] = (short)(GMR[0] & 0x0000FFFF); // rR = GMRx0[15:0]
+            } else if(tick == 3) {
+                SPR[4] = (short)((GMR[0] & 0xFFFF0000) >> 16);  // SR = GMRx0[31:16]
+            } else if(tick == 7) {
+                SPR[2] = SPR[0];    // PPC = NPC
+            } else if(tick == 8) {
+                state = State.FETCH;    // Switches back to fetch mode
             }
         }
     }
@@ -143,8 +162,15 @@ public class IRP1608 extends RCore1608 {
 
     public void DEBUG() {
         System.out.printf(
-            "NPC: %04x PPC: %04x IR: %04x RA: %04x $4: %04x\n",
-            SPR[0], SPR[2], SPR[1], GPR[1], GPR[4]
+            """
+            General Purpose Registers,
+            $0: %04x RA: %04x $2: %04x $3: %04x $4: %04x
+            Special Purpose Registers,
+            NPC: %04x PPC: %04x IR: %04x SR: %04x AMR: %04x
+            """,
+
+            GPR[0], GPR[1], GPR[2], GPR[3], GPR[4],
+            SPR[0], SPR[2], SPR[1], SPR[3], SPR[4]
         );
     }
 }

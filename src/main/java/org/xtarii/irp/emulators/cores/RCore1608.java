@@ -23,7 +23,7 @@ public abstract class RCore1608 {
      * x1 = ra  // Return address
      * </pre>
      */
-    protected final short[] GPR = new short[0xF];
+    protected final short[] GPR = new short[16];
 
     /**
      * 16 bit special purpose registers
@@ -33,9 +33,10 @@ public abstract class RCore1608 {
      * x1 = IR  - Instruction register
      * x2 = PPC - Previous program count
      * x3 = SR  - Supervision register, processor status
+     * x4 = AMR - Arithmetic registry
      * </pre>
      */
-    protected final short[] SPR = new short[4];
+    protected final short[] SPR = new short[5];
 
     /**
      * 16 bit state exception registers
@@ -47,6 +48,14 @@ public abstract class RCore1608 {
      * </pre>
      */
     protected final short[] SER = new short[3];
+
+    /**
+     * General math registers
+     * <p>
+     * These store up to 32 bits of data
+     * and are used to perform math equations.
+     */
+    protected final int[] GMR = new int[2];
 
     /**
      * Processor instruction set
