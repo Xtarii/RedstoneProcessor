@@ -30,6 +30,7 @@ public class IRP1608 extends RCore1608 {
         inst[0x3] = this::add;
         inst[0x4] = this::subtract;
         inst[0x5] = this::multiply;
+        inst[0x6] = this::divide;
 
         inst[0xC] = this::loadImmediate;
 
@@ -173,6 +174,16 @@ public class IRP1608 extends RCore1608 {
                 state = State.FETCH;    // Switch back to fetching
             }
         }
+    }
+
+    private void divide(byte tick) {
+
+        // Divide
+
+        // Skip if zero registry
+
+        // Error if divider is 0
+
     }
 
     private void loadImmediate(byte tick) {
