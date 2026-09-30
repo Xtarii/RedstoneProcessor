@@ -27,9 +27,9 @@ public class IRP1608 extends RCore1608 {
         inst[0x1] = this::jumpAndLink;
         inst[0x2] = this::jumpRegister;
 
-        inst[0x3] = this::loadImmediate;
+        inst[0x3] = this::add;
 
-        inst[0x5] = this::add;
+        inst[0xC] = this::loadImmediate;
 
         inst[0xF] = this::nop;
 

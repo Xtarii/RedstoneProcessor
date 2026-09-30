@@ -134,11 +134,11 @@ public class ProcessorBlockEntity extends BlockEntity {
 
                     short[] program = {
                         (short)0xF000,
-                        (short)0x30FF,  // li $0 0xFF       % Should fail
-                        (short)0x3208,  // li $2 0x08
-                        (short)0x3401,  // li $4 0x1
-                        (short)0x5002,  // add $0 $0 $2     % Should fail
-                        (short)0x5342,  // add $3 $4 $2     % $3 = $2 + 1
+                        (short)0xC0FF,  // li $0 0xFF       % Should fail
+                        (short)0xC208,  // li $2 0x08
+                        (short)0xC401,  // li $4 0x1
+                        (short)0x3002,  // add $0 $0 $2     % Should fail
+                        (short)0x3342,  // add $3 $4 $2     % $3 = $2 + 1
                         (short)0x20F0,  // Jumps to start of program ( r15 = 0x0000 )
 
 
