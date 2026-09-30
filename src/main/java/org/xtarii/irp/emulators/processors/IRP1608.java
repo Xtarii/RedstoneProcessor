@@ -29,6 +29,7 @@ public class IRP1608 extends RCore1608 {
 
         inst[0x3] = this::add;
         inst[0x4] = this::subtract;
+        inst[0x5] = this::multiply;
 
         inst[0xC] = this::loadImmediate;
 
@@ -65,9 +66,6 @@ public class IRP1608 extends RCore1608 {
 
 
 
-    /**
-     * Jump instruction
-     */
     private void jump(byte tick) {
         if(tick == 6) {
             PPR[0] = (short)(SPR[1] & 0x0FFF);  // PPRx0 = JMP address
@@ -78,9 +76,6 @@ public class IRP1608 extends RCore1608 {
         }
     }
 
-    /**
-     * Jump and link instruction
-     */
     private void jumpAndLink(byte tick) {
         if(tick == 5) {
             GPR[1] = SPR[0];    // RA = NPC
@@ -88,9 +83,6 @@ public class IRP1608 extends RCore1608 {
         jump(tick);
     }
 
-    /**
-     * Jump to register instruction
-     */
     private void jumpRegister(byte tick) {
         if(tick == 6) {
             PPR[0] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx0 = rB
@@ -101,9 +93,6 @@ public class IRP1608 extends RCore1608 {
         }
     }
 
-    /**
-     * Add instruction
-     */
     private void add(byte tick) {
         if(state == State.FETCH) {
             if(tick == 5) {
@@ -132,9 +121,6 @@ public class IRP1608 extends RCore1608 {
         }
     }
 
-    /**
-     * Subtract instruction
-     */
     private void subtract(byte tick) {
         if(state == State.FETCH) {
             if(tick == 5) {
@@ -161,9 +147,10 @@ public class IRP1608 extends RCore1608 {
         }
     }
 
-    /**
-     * Loads immediate instruction
-     */
+    private void multiply(byte tick) {
+        if(tick == 5) {}
+    }
+
     private void loadImmediate(byte tick) {
         if(tick == 5) {
             PPR[0] = (short)((SPR[1] & 0x0F00) >> 8); // PPRx0 = rB
@@ -176,9 +163,6 @@ public class IRP1608 extends RCore1608 {
         }
     }
 
-    /**
-     * No operation instruction
-     */
     private void nop(byte tick) {
         if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
