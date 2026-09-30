@@ -28,6 +28,7 @@ public class IRP1608 extends RCore1608 {
         inst[0x2] = this::jumpRegister;
 
         inst[0x3] = this::add;
+        inst[0x4] = this::subtract;
 
         inst[0xC] = this::loadImmediate;
 
@@ -111,13 +112,15 @@ public class IRP1608 extends RCore1608 {
                 PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
             } else if(tick == 7) {
                 PPR[2] = (short)((SPR[1] & 0x000F));    // PPRx2 = rB
-            } else if(tick == 8) {
+            } else if(tick == 8 && PPR[0] != 0x0) {
                 state = State.EXECUTE;  // Switches to execute
+            } else if(tick == 8) {
+                SPR[2] = SPR[0];    // PPC = NPC if rR = $0
             }
         } else {
             if(tick == 1) {
                 GMR[0] = (int)(GPR[PPR[1]] + GPR[PPR[2]]);    // GMRx0 = rA + rB
-            } else if(tick == 2 && PPR[0] != 0x0) {
+            } else if(tick == 2) {
                 GPR[PPR[0]] = (short)(GMR[0] & 0x0000FFFF); // rR = GMRx0[15:0]
             } else if(tick == 3) {
                 SPR[4] = (short)((GMR[0] & 0xFFFF0000) >> 16);  // SR = GMRx0[31:16]
@@ -125,6 +128,35 @@ public class IRP1608 extends RCore1608 {
                 SPR[2] = SPR[0];    // PPC = NPC
             } else if(tick == 8) {
                 state = State.FETCH;    // Switches back to fetch mode
+            }
+        }
+    }
+
+    /**
+     * Subtract instruction
+     */
+    private void subtract(byte tick) {
+        if(state == State.FETCH) {
+            if(tick == 5) {
+                PPR[0] = (short)((SPR[1] & 0x0F00) >> 8); // PPRx0 = rR
+            } else if(tick == 6) {
+                PPR[1] = (short)((SPR[1] & 0x00F0) >> 4); // PPRx1 = rA
+            } else if(tick == 7) {
+                PPR[2] = (short)((SPR[1] & 0x000F));    // PPRx2 = rB
+            } else if(tick == 8 && PPR[0] != 0x0) {
+                state = State.EXECUTE;  // Execute subtract
+            } else if(tick == 8) {
+                SPR[2] = SPR[0];    // PPC = NPC if rB = $0
+            }
+        } else {
+            if(tick == 1) {
+                GMR[0] = (int)(GPR[PPR[1]] - GPR[PPR[2]]);  // GMRx0 = rA - rB
+            } else if(tick == 2) {
+                GPR[PPR[0]] = (short)(GMR[0]); // rR = GMRx0
+            } else if(tick == 7) {
+                SPR[2] = SPR[0];    // PPC = NPC
+            } else if(tick == 8) {
+                state = State.FETCH;    // Switches back to fetching
             }
         }
     }

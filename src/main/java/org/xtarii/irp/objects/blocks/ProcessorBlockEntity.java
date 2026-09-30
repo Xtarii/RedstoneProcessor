@@ -139,7 +139,8 @@ public class ProcessorBlockEntity extends BlockEntity {
                         (short)0xC401,  // li $4 0x1
                         (short)0x3002,  // add $0 $0 $2     % Should fail
                         (short)0x3342,  // add $3 $4 $2     % $3 = $2 + 1
-                        (short)0x20F0,  // Jumps to start of program ( r15 = 0x0000 )
+                        (short)0x4432,  // sub $4 $3 $2
+                        (short)0x2010,  // Jumps to start of program ( RA = 0x0000 )
 
 
 
