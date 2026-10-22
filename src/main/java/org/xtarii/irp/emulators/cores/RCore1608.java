@@ -13,7 +13,7 @@ public abstract class RCore1608 {
     /**
      * Processor RAM
      */
-    protected final short[] RAM;
+    protected final byte[] RAM;
 
     /**
      * 16 bit general purpose registers
@@ -21,6 +21,8 @@ public abstract class RCore1608 {
      * <pre>
      * x0 = 0x0 // Always zero
      * x1 = ra  // Return address
+     *
+     * x15 = sp // Stack pointer
      * </pre>
      */
     protected final short[] GPR = new short[16];
@@ -85,7 +87,7 @@ public abstract class RCore1608 {
      * @param size Processor RAM size
      */
     protected RCore1608(short size) {
-        RAM = new short[size];
+        RAM = new byte[size];
         GPR[0] = 0x0; // $0 is always 0
 
         state = State.FETCH;
@@ -184,6 +186,11 @@ public abstract class RCore1608 {
                 break;
             case 2:
                 if(state == State.FETCH) {
+
+                    // PC *= 16
+                    // RAM[PC] as short
+
+
                     SPR[1] = RAM[SPR[2]];   // IR = RAM[PPC]
                 }
                 break;

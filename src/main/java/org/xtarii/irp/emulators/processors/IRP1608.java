@@ -9,6 +9,13 @@ import org.xtarii.irp.emulators.cores.RCore1608;
  */
 public class IRP1608 extends RCore1608 {
     /**
+     * Stack pointer position
+     */
+    public static final short STACK = (short)0xFFFF;
+
+
+
+    /**
      * Processor pipeline registers
      */
     private final short[] PPR = new short[4];
@@ -19,7 +26,7 @@ public class IRP1608 extends RCore1608 {
      * Creates a IRP 16 bit processor object
      */
     public IRP1608() {
-        super((short)4096);
+        super((short)0xFFFF);
 
         Instruction[] inst = new Instruction[16];
 
@@ -57,8 +64,17 @@ public class IRP1608 extends RCore1608 {
         resetRegisters();
 
         for(int i = 0; i < program.length; i++) {
-            RAM[i] = program[i];
+
+            // hi[Program]
+            // lo[Program]
+            // RAM[i] = hi
+            // RAM[i + 1] = lo
+
+
+            // RAM[i] = program[i];
         }
+
+        GPR[15] = STACK;
 
         return true;
     }
@@ -217,12 +233,12 @@ public class IRP1608 extends RCore1608 {
         System.out.printf(
             """
             General Purpose Registers,
-            $0: %04x RA: %04x $2: %04x $3: %04x $4: %04x
+            $0: %04x RA: %04x $2: %04x $3: %04x $4: %04x SP: %04x
             Special Purpose Registers,
             NPC: %04x PPC: %04x IR: %04x SR: %04x AMR: %04x
             """,
 
-            GPR[0], GPR[1], GPR[2], GPR[3], GPR[4],
+            GPR[0], GPR[1], GPR[2], GPR[3], GPR[4], GPR[15],
             SPR[0], SPR[2], SPR[1], SPR[3], SPR[4]
         );
     }
