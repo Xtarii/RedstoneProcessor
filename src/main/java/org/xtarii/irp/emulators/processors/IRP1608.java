@@ -11,7 +11,7 @@ public class IRP1608 extends RCore1608 {
     /**
      * Stack pointer position
      */
-    public static final short STACK = (short)0xFFFF;
+    public static final short STACK = (short)(4092 * 2);
 
 
 
@@ -26,7 +26,7 @@ public class IRP1608 extends RCore1608 {
      * Creates a IRP 16 bit processor object
      */
     public IRP1608() {
-        super((short)0xFFFF);
+        super(STACK);   // 4092, 16 bits RAM
 
         Instruction[] inst = new Instruction[16];
 
