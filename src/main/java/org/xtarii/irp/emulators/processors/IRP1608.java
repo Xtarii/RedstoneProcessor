@@ -40,6 +40,7 @@ public class IRP1608 extends RCore1608 {
         inst[0x6] = this::divide;
 
         inst[0xC] = this::loadImmediate;
+        inst[0xD] = this::loadByte;
 
         inst[0xF] = this::nop;
 
@@ -206,6 +207,22 @@ public class IRP1608 extends RCore1608 {
             PPR[1] = (short)(SPR[1] & 0x00FF);  // PPRx1 = immediate
         } else if(tick == 7 && PPR[0] != 0x0) {
             GPR[PPR[0]] = PPR[1];   // rB = immediate
+        } else if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
+    private void loadByte(byte tick) {
+        if(tick == 5) {
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rB
+        } else if(tick == 6) {
+            PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
+        } else if(tick == 7) {
+            PPR[2] = (short)((SPR[1] & 0x000F));        // PPRx2 = offset
+        } else if(tick == 8 && PPR[0] != 0x0) {
+            short gpr = GPR[PPR[1]];
+            short value = (short)(RAM[gpr + PPR[2]] & 0x00FF);
+            GPR[PPR[0]] = value;
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
         }
