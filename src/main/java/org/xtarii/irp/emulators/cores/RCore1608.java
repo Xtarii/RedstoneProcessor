@@ -181,17 +181,16 @@ public abstract class RCore1608 {
         switch(tick) {
             case 1:
                 if(state == State.FETCH) {
-                    SPR[0] += 1;    // NPC += 1
+                    SPR[0] += 2;    // NPC += 2 ( 1 short )
                 }
                 break;
             case 2:
                 if(state == State.FETCH) {
+                    short high = (short)((RAM[SPR[2]] << 8) & 0xFF00);
+                    short low = (short)(RAM[SPR[2] + 1] & 0x00FF);
 
-                    // PC *= 16
-                    // RAM[PC] as short
-
-
-                    SPR[1] = RAM[SPR[2]];   // IR = RAM[PPC]
+                    short ir = (short)(high | low);
+                    SPR[1] = ir;   // IR = RAM[PPC]
                 }
                 break;
             default:

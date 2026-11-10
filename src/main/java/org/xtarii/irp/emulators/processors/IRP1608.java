@@ -64,14 +64,11 @@ public class IRP1608 extends RCore1608 {
         resetRegisters();
 
         for(int i = 0; i < program.length; i++) {
+            byte high = (byte)((program[i] & 0xFF00) >> 8);
+            byte low = (byte)((program[i] & 0x00FF));
 
-            // hi[Program]
-            // lo[Program]
-            // RAM[i] = hi
-            // RAM[i + 1] = lo
-
-
-            // RAM[i] = program[i];
+            RAM[(i * 2)] = high;
+            RAM[(i * 2) + 1] = low;
         }
 
         GPR[15] = STACK;
