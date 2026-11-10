@@ -243,7 +243,7 @@ public class IRP1608 extends RCore1608 {
             PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rB
         } else if(tick == 6) {
             PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
-        } else if(tick == 7 && PPR[0] != 0x0) {
+        } else if(tick == 7) {
             short offset = (short)((SPR[1] & 0x000F));
             short gpr = GPR[PPR[1]];
             RAM[gpr + offset] = (byte)(GPR[PPR[0]] & 0x00FF);
@@ -274,10 +274,12 @@ public class IRP1608 extends RCore1608 {
             $0: %04x RA: %04x $2: %04x $3: %04x $4: %04x SP: %04x
             Special Purpose Registers,
             NPC: %04x PPC: %04x IR: %04x SR: %04x AMR: %04x
+            RAM: %02x
             """,
 
             GPR[0], GPR[1], GPR[2], GPR[3], GPR[4], GPR[15],
-            SPR[0], SPR[2], SPR[1], SPR[3], SPR[4]
+            SPR[0], SPR[2], SPR[1], SPR[3], SPR[4],
+            RAM[GPR[0xF]]   // Current RAM value
         );
     }
 }
