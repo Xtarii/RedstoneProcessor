@@ -41,6 +41,7 @@ public class IRP1608 extends RCore1608 {
 
         inst[0xC] = this::loadImmediate;
         inst[0xD] = this::loadByte;
+        inst[0xE] = this::storeByte;
 
         inst[0xF] = this::nop;
 
@@ -72,7 +73,7 @@ public class IRP1608 extends RCore1608 {
             RAM[(i * 2) + 1] = low;
         }
 
-        GPR[15] = STACK;
+        GPR[15] = STACK - 1;    // Last byte in stack
 
         return true;
     }
@@ -213,16 +214,39 @@ public class IRP1608 extends RCore1608 {
     }
 
     private void loadByte(byte tick) {
+
+        //
+        // Try or FAIL
+        //
+
         if(tick == 5) {
             PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rB
         } else if(tick == 6) {
             PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
-        } else if(tick == 7) {
-            PPR[2] = (short)((SPR[1] & 0x000F));        // PPRx2 = offset
-        } else if(tick == 8 && PPR[0] != 0x0) {
+        } else if(tick == 7 && PPR[0] != 0x0) {
+            short offset = (short)((SPR[1] & 0x000F));
             short gpr = GPR[PPR[1]];
-            short value = (short)(RAM[gpr + PPR[2]] & 0x00FF);
+            short value = (short)(RAM[gpr + offset] & 0x00FF);
             GPR[PPR[0]] = value;
+        } else if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
+    private void storeByte(byte tick) {
+
+        //
+        // Try or FAIL
+        //
+
+        if(tick == 5) {
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rB
+        } else if(tick == 6) {
+            PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
+        } else if(tick == 7 && PPR[0] != 0x0) {
+            short offset = (short)((SPR[1] & 0x000F));
+            short gpr = GPR[PPR[1]];
+            RAM[gpr + offset] = (byte)(GPR[PPR[0]] & 0x00FF);
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
         }
