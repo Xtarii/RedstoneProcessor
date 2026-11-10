@@ -139,13 +139,6 @@ public class ProcessorBlockEntity extends BlockEntity {
                         (short)0xC402,  // li $4 0x02
                         (short)0x5424,  // mul $4 $2 $2     % $4 = $2 * $4
                         (short)0x2010,  // Jumps to start of program ( RA = 0x0000 )
-
-
-
-                        // (short)0xF4FF, // lb $4, 0xFF
-                        (short)0xF0FF, // lb $0, 0xFF   % Invalid
-
-                        (short)0XF000, // Jumps to first line
                     };
 
                     processor.emulator.load(program);
