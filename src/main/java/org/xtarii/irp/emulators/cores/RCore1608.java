@@ -280,7 +280,7 @@ public abstract class RCore1608 {
     protected void invokeError(byte error) {
         resetTick();
 
-        SPR[3] = SPR[2];        // Store error cause
+        SPR[3] = SPR[2];        // Store error cause address
         GPR[1] = SPR[0];        // Store the return address
         SPR[2] = CSR[error];    // Jumps to error handler
     }
