@@ -90,7 +90,7 @@ public abstract class RCore1608 {
      * x16 - x255   | 0x10 - 0xFF   // Custom user process handlers
      * </pre>
      */
-    private final short[] CSR = new short[0xFF];
+    protected final short[] CSR = new short[0xFF];
 
     /**
      * Processor cycle state
