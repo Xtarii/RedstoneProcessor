@@ -26,7 +26,7 @@ public class IRP1608 extends RCore1608 {
      * Creates a IRP 16 bit processor object
      */
     public IRP1608() {
-        super(STACK);   // 4092, 16 bits RAM
+        super(STACK);   // 8184, 16 bits RAM
 
         Instruction[] inst = new Instruction[16];
 
