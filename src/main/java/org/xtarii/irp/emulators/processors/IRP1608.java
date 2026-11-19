@@ -11,7 +11,7 @@ public class IRP1608 extends RCore1608 {
     /**
      * Stack pointer position
      */
-    public static final short STACK = (short)(4092 * 2);
+    public static final short STACK = (short)(8184 * 2);
 
 
 
@@ -38,6 +38,8 @@ public class IRP1608 extends RCore1608 {
         inst[0x4] = this::subtract;
         inst[0x5] = this::multiply;
         inst[0x6] = this::divide;
+
+        inst[0xB] = this::invokeSystemCall;
 
         inst[0xC] = this::loadImmediate;
         inst[0xD] = this::loadByte;
@@ -195,10 +197,35 @@ public class IRP1608 extends RCore1608 {
 
         // Divide
 
-        // Skip if zero registry
+        if(state == State.FETCH) {
+            if(tick == 5) {
+                PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rR
+            } else if(tick == 6) {
+                PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
+            } else if(tick == 7) {
+                PPR[2] = (short)((SPR[1] & 0x000F));        // PPRx2 = rB
+            } else if(tick == 8 && PPR[0] != 0x0) {
+                state = State.EXECUTE;
+            } else {
+                SPR[2] = SPR[0];    // PPC = NPC if rR = $0
+            }
+        } else {
+            if(tick == 1) {
 
-        // Error if divider is 0
+                // Try or FAIL
 
+                GMR[0] = (int)(GPR[PPR[1]] / GPR[PPR[2]]);  // GMRx0 = rA / rB
+
+            } else if(tick == 2) {
+                GPR[PPR[0]] = (short)(GMR[0] & 0x0000FFFF); // rR = GMRx0[15:0]
+            } else if(tick == 3) {
+                SPR[4] = (short)((GMR[0] & 0xFFFF0000) >> 16);  // AMR = GMRx0[31:16]
+            } else if(tick == 7) {
+                SPR[2] = SPR[0];    // PPC = NPC
+            } else if(tick == 8) {
+                state = State.FETCH;
+            }
+        }
     }
 
     private void loadImmediate(byte tick) {
@@ -226,6 +253,13 @@ public class IRP1608 extends RCore1608 {
         } else if(tick == 7 && PPR[0] != 0x0) {
             short offset = (short)((SPR[1] & 0x000F));
             short gpr = GPR[PPR[1]];
+
+            if((gpr + offset) >= STACK) {
+                //
+                // FAIL
+                //
+            }
+
             short value = (short)(RAM[gpr + offset] & 0x00FF);
             GPR[PPR[0]] = value;
         } else if(tick == 8) {
@@ -246,6 +280,15 @@ public class IRP1608 extends RCore1608 {
         } else if(tick == 7) {
             short offset = (short)((SPR[1] & 0x000F));
             short gpr = GPR[PPR[1]];
+
+            if((gpr + offset) >= STACK) {
+
+                //
+                // FAIL
+                //
+
+            }
+
             RAM[gpr + offset] = (byte)(GPR[PPR[0]] & 0x00FF);
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC

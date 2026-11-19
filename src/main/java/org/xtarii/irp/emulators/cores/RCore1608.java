@@ -22,6 +22,11 @@ public abstract class RCore1608 {
      * x0 = 0x0 // Always zero
      * x1 = ra  // Return address
      *
+     * x10 = v0 // Return value from function call
+     * x11 = a0 // Parameter 0
+     * x12 = a1 // Parameter 1
+     * x13 = a2 // Parameter 3
+     *
      * x15 = sp // Stack pointer
      * </pre>
      */
@@ -65,6 +70,29 @@ public abstract class RCore1608 {
     private Instruction[] INST = null;
 
     /**
+     * System call instruction set
+     */
+    private Instruction[] SYS = new Instruction[0xF];
+
+    /**
+     * Controls state registers
+     * <p>
+     * Theses registers store the 16 bit
+     * address of control state registers.
+     * They are invoked when the state of
+     * this processor changes.
+     * <p>
+     * They can be overwritten by a user
+     * process.
+     * <p>
+     * <pre>
+     * x0 - x15     | 0x0 - 0xF     // Error traps for error handling
+     * x16 - x255   | 0x10 - 0xFF   // Custom user process handlers
+     * </pre>
+     */
+    private final short[] CSR = new short[0xFF];
+
+    /**
      * Processor cycle state
      */
     protected State state;
@@ -89,6 +117,9 @@ public abstract class RCore1608 {
     protected RCore1608(short size) {
         RAM = new byte[size];
         GPR[0] = 0x0; // $0 is always 0
+
+        // System instructions
+        SYS[0x0] = this::halt;
 
         state = State.FETCH;
         tick = 1;
@@ -125,6 +156,8 @@ public abstract class RCore1608 {
      * next {@link #cycle()} call.
      */
     public void cycle() {
+        if(!power) return;
+
         if(tick <= 8) {
             processTick(tick);
             processInstruction(tick);
@@ -212,6 +245,31 @@ public abstract class RCore1608 {
     }
 
     /**
+     * Invokes a processor system call
+     *
+     * @param tick Processor cycle tick
+     */
+    protected void invokeSystemCall(byte tick) {
+        short func = GPR[10];
+        if(func <= 0xF) {
+            SYS[func].execute(tick);
+        } else {
+            func -= 0xF;
+
+            if(func > 0xFF) {
+
+                // Error
+
+            }
+
+            resetTick();
+
+            GPR[1] = SPR[0];      // Store the return address
+            SPR[2] = CSR[func];   // Jumps to CRS address
+        }
+    }
+
+    /**
      * Sets the processor instruction set
      * <p>
      * This loads a set of instructions available
@@ -235,6 +293,20 @@ public abstract class RCore1608 {
         } else {
             throw new IllegalAccessException("An instruction set is already loaded.");
         }
+    }
+
+    /**
+     * Halts the processor execution of a program
+     * <p>
+     * This will turn off the power to the processor.
+     * <p>
+     * The tick parameter is unused and the value of it
+     * does not matter.
+     *
+     * @param tick Current processor tick
+     */
+    public void halt(byte tick) {
+        setPower(false);
     }
 
     /**
