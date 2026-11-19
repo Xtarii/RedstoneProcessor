@@ -194,9 +194,6 @@ public class IRP1608 extends RCore1608 {
     }
 
     private void divide(byte tick) {
-
-        // Divide
-
         if(state == State.FETCH) {
             if(tick == 5) {
                 PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rR
@@ -212,7 +209,9 @@ public class IRP1608 extends RCore1608 {
         } else {
             if(tick == 1) {
 
-                // Try or FAIL
+                if(GPR[PPR[2]] == 0x0) {
+                    invokeError((byte)0x0);     // Division by 0
+                }
 
                 GMR[0] = (int)(GPR[PPR[1]] / GPR[PPR[2]]);  // GMRx0 = rA / rB
 
@@ -241,11 +240,6 @@ public class IRP1608 extends RCore1608 {
     }
 
     private void loadByte(byte tick) {
-
-        //
-        // Try or FAIL
-        //
-
         if(tick == 5) {
             PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rB
         } else if(tick == 6) {
@@ -268,11 +262,6 @@ public class IRP1608 extends RCore1608 {
     }
 
     private void storeByte(byte tick) {
-
-        //
-        // Try or FAIL
-        //
-
         if(tick == 5) {
             PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rB
         } else if(tick == 6) {

@@ -270,6 +270,22 @@ public abstract class RCore1608 {
     }
 
     /**
+     * Invokes a error call
+     * <p>
+     * This invokes a error call on the processor
+     * and jumps to the correct error handler.
+     *
+     * @param error Error cause
+     */
+    protected void invokeError(byte error) {
+        resetTick();
+
+        SPR[3] = SPR[2];        // Store error cause
+        GPR[1] = SPR[0];        // Store the return address
+        SPR[2] = CSR[error];    // Jumps to error handler
+    }
+
+    /**
      * Sets the processor instruction set
      * <p>
      * This loads a set of instructions available
