@@ -75,7 +75,11 @@ public class IRP1608 extends RCore1608 {
             RAM[(i * 2) + 1] = low;
         }
 
-        GPR[15] = STACK - 1;    // Last byte in stack
+        RAM[STACK - 4] = (byte)0xCA;
+        RAM[STACK - 3] = (byte)0x00;
+        RAM[STACK - 2] = (byte)0xB0;
+
+        GPR[15] = STACK - 5;    // Last byte in stack
 
         return true;
     }
