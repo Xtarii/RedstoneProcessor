@@ -270,9 +270,9 @@ public abstract class RCore1608 {
     }
 
     /**
-     * Invokes a error call
+     * Invokes an error call
      * <p>
-     * This invokes a error call on the processor
+     * This invokes an error call on the processor
      * and jumps to the correct error handler.
      *
      * @param error Error cause
