@@ -140,6 +140,12 @@ public class ProcessorBlockEntity extends BlockEntity {
                         (short)0xE4F0,  // sb $4 0($STACK)
                         (short)0x5424,  // mul $4 $2 $2     % $4 = $2 * $4
 
+                        (short)0xC201,  // li $2 0x01
+                        (short)0x7221,  // ls $2 $2 1       % $2 = $2 << 1
+                        (short)0x8221,  // rs $2 $2 1       % $2 = $2 >> 1
+
+                        (short)0x9222,  // nand $2 $2 $2
+
                         // (short)0x6200,  // div $2 $0 $0     % $2 = 0 / 0
 
                         // (short)0xCA10,  // li $a0 0x10      % Error trap
