@@ -261,9 +261,8 @@ public abstract class RCore1608 {
             func -= 0x10;
 
             if(func > 0xFF) {
-
-                // Error
-
+                invokeError((byte)0xF);
+                return;
             }
 
             state = State.FETCH;
