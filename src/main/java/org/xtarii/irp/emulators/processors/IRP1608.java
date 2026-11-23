@@ -39,6 +39,9 @@ public class IRP1608 extends RCore1608 {
         inst[0x5] = this::multiply;
         inst[0x6] = this::divide;
 
+        inst[0x7] = this::leftShift;
+        inst[0x8] = this::rightShift;
+
         inst[0xB] = this::invokeSystemCall;
 
         inst[0xC] = this::loadImmediate;
@@ -238,6 +241,30 @@ public class IRP1608 extends RCore1608 {
             } else if(tick == 8) {
                 state = State.FETCH;
             }
+        }
+    }
+
+    private void leftShift(byte tick) {
+        if(tick == 5) {
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rA
+        } else if(tick == 6) {
+            PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rB
+        } else if(tick == 7 && PPR[0] != 0x0) {
+            GPR[PPR[0]] = (short)(GPR[PPR[1]] << (SPR[1] & 0x000F));    // rA = rB << x
+        } else if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
+    private void rightShift(byte tick) {
+        if(tick == 5) {
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rA
+        } else if(tick == 6) {
+            PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rB
+        } else if(tick == 7 && PPR[0] != 0x0) {
+            GPR[PPR[0]] = (short)(GPR[PPR[1]] >> (SPR[1] & 0x000F));    // rA = rB >> x
+        } else if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
         }
     }
 
