@@ -291,7 +291,7 @@ public class IRP1608 extends RCore1608 {
         } else if(tick == 7) {
             PPR[2] = (short)(SPR[1] & 0x000F);          // PPRx2 = rB
         } else if(tick == 8) {
-            if(GPR[PPR[1]] < GPR[PPR[2]]) {
+            if((GPR[PPR[1]] & 0x0000FFFF) < (GPR[PPR[2]] & 0x0000FFFF)) {
                 SPR[0] = GPR[PPR[0]]; // NPC = address
             }
 
