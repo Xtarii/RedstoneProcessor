@@ -17,10 +17,10 @@ not be modified.
 
 All modifiable traps are stored at `0x10` and above.
 
-| CSR (+0x10) | Code (*Error) |
-|-------------|---------------|
-|    0x0      | *NULL         |
-|    0x1      | *
+| CSR (+0x10) | Code (*Error)   |
+|-------------|-----------------|
+|    0x0      | *NULL           |
+|    0x1      | *STACK OVERFLOW |
 
 
 
