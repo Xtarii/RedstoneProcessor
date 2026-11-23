@@ -41,6 +41,7 @@ public class IRP1608 extends RCore1608 {
 
         inst[0x7] = this::leftShift;
         inst[0x8] = this::rightShift;
+        inst[0x9] = this::nand;
 
         inst[0xB] = this::invokeSystemCall;
 
@@ -263,6 +264,19 @@ public class IRP1608 extends RCore1608 {
             PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rB
         } else if(tick == 7 && PPR[0] != 0x0) {
             GPR[PPR[0]] = (short)(GPR[PPR[1]] >> (SPR[1] & 0x000F));    // rA = rB >> x
+        } else if(tick == 8) {
+            SPR[2] = SPR[0];    // PPC = NPC
+        }
+    }
+
+    private void nand(byte tick) {
+        if(tick == 5) {
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rR
+        } else if(tick == 6) {
+            PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
+            PPR[2] = (short)(SPR[1] & 0x000F);          // PPRx2 = rB
+        } else if(tick == 7 && PPR[0] != 0x0) {
+            GPR[PPR[0]] = (short)(~(GPR[PPR[1]] & GPR[PPR[2]]));
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
         }
