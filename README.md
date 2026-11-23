@@ -2,7 +2,46 @@ IRP 1608
 =======
 
 The IRP 1608 is a simple 16 bit processor. It is often regarded as the
-reason Steve lost the moon race.
+reason Steve lost the moon race during the cold war.
+
+IRP 1608 is a 16 bit, 8 tick processor with an instruction set of 16
+instructions in total.
+
+| Instruction | OP code |    Data     |       Description       |
+| ----------- | ------- | ----------- | ----------------------- |
+| Jump        | 0x0     | A = 0x0FFF  | Jumps to the designated |
+|             |         |             | address [ 0:12 ]        |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Jump and    | 0x1     | A = 0x0FFF  | Jumps to the designated |
+| link        |         |             | address [ 0:12 ] and    |
+|             |         |             | stores the jumper in $1 |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Jump        | 0x2     | rB = 0x00F0 | Jumps to the address    |
+| register    |         |             | stored in register `rB` |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Add         | 0x3     | rR = 0x0F00 | Adds two integers       |
+|             |         | rA = 0x00F0 | together (unsigned)     |
+|             |         | rB = 0x000F | and stores the result   |
+|             |         |             | in register `rR`        |
+| :---------: | :-----: | :---------: | :---------------------: |
+
+
+inst[0x4] = this::subtract;
+inst[0x5] = this::multiply;
+inst[0x6] = this::divide;
+
+inst[0x7] = this::leftShift;
+inst[0x8] = this::rightShift;
+inst[0x9] = this::nand;
+
+inst[0xA] = this::branchLessThan;
+inst[0xB] = this::invokeSystemCall;
+
+inst[0xC] = this::loadImmediate;
+inst[0xD] = this::loadByte;
+inst[0xE] = this::storeByte;
+
+inst[0xF] = this::nop;
 
 Functions are stored as `0x0 - 0xFF` and may be invoked
 as pleased by the programmer.
