@@ -15,7 +15,8 @@ not be modified.
 | 0x0 | Halt     |
 
 
-All modifiable traps are stored at `0x10` and above.
+All modifiable traps are stored at `0x10` and above. To call them
+add `0x10` to their codes.
 
 | CSR (+0x10) | Code (*Error)   |
 |-------------|-----------------|
