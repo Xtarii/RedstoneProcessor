@@ -263,9 +263,8 @@ public class IRP1608 extends RCore1608 {
             short gpr = GPR[PPR[1]];
 
             if((gpr + offset) >= STACK) {
-                //
-                // FAIL
-                //
+                invokeError((byte)0x1);
+                return;
             }
 
             short value = (short)(RAM[gpr + offset] & 0x00FF);
@@ -285,11 +284,8 @@ public class IRP1608 extends RCore1608 {
             short gpr = GPR[PPR[1]];
 
             if((gpr + offset) >= STACK) {
-
-                //
-                // FAIL
-                //
-
+                invokeError((byte)0x1);
+                return;
             }
 
             RAM[gpr + offset] = (byte)(GPR[PPR[0]] & 0x00FF);
