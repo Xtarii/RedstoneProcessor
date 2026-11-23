@@ -22,6 +22,8 @@ add `0x10` to their codes.
 |-------------|-----------------|
 |    0x0      | *NULL           |
 |    0x1      | *STACK OVERFLOW |
+|    0xF      | *Func not found |
+|:-----------:|:---------------:|
 
 
 
