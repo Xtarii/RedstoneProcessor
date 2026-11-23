@@ -1,3 +1,34 @@
+IRP 1608
+=======
+
+The IRP 1608 is a simple 16 bit processor. It is often regarded as the
+reason Steve lost the moon race.
+
+Functions are stored as `0x0 - 0xFF` and may be invoked
+as pleased by the programmer.
+
+The first `0x0 - 0xF` are built in processor functions and can
+not be modified.
+
+| CSR |   Code   |
+|-----|----------|
+| 0x0 | Halt     |
+
+
+All modifiable traps are stored at `0x10` and above.
+
+| CSR (+0x10) | Code (*Error) |
+|-------------|---------------|
+|    0x0      | *NULL         |
+|    0x1      | *
+
+
+
+Run
+=======
+`./gradlew runClient`
+
+
 
 Installation information
 =======

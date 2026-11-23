@@ -71,8 +71,12 @@ public abstract class RCore1608 {
 
     /**
      * System call instruction set
+     * <p>
+     * <pre>
+     * 0x0 - 0xF    // System functions
+     * </pre>
      */
-    private Instruction[] SYS = new Instruction[0xF];
+    private Instruction[] SYS = new Instruction[0x10];
 
     /**
      * Controls state registers
@@ -87,10 +91,10 @@ public abstract class RCore1608 {
      * <p>
      * <pre>
      * x0 - x15     | 0x0 - 0xF     // Error traps for error handling
-     * x16 - x255   | 0x10 - 0xFF   // Custom user process handlers
+     * x16 - x255   | 0x10 - 0xEF   // Custom user process handlers
      * </pre>
      */
-    protected final short[] CSR = new short[0xFF];
+    protected final short[] CSR = new short[0xEF];
 
     /**
      * Processor cycle state
@@ -254,7 +258,7 @@ public abstract class RCore1608 {
         if(func <= 0xF) {
             SYS[func].execute(tick);
         } else {
-            func -= 0xF;
+            func -= 0x10;
 
             if(func > 0xFF) {
 
@@ -262,10 +266,12 @@ public abstract class RCore1608 {
 
             }
 
+            state = State.FETCH;
             resetTick();
 
             GPR[1] = SPR[0];      // Store the return address
-            SPR[2] = CSR[func];   // Jumps to CRS address
+            SPR[0] = CSR[func];   // NPC = CSR
+            SPR[2] = SPR[0];      // Jumps to CRS address
         }
     }
 
@@ -278,11 +284,13 @@ public abstract class RCore1608 {
      * @param error Error cause
      */
     protected void invokeError(byte error) {
+        state = State.FETCH;
         resetTick();
 
         SPR[3] = SPR[2];        // Store error cause address
         GPR[1] = SPR[0];        // Store the return address
-        SPR[2] = CSR[error];    // Jumps to error handler
+        SPR[0] = CSR[error];    // Jumps to error handler
+        SPR[2] = SPR[0];        // Processor jump
     }
 
     /**

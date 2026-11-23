@@ -139,6 +139,7 @@ public class ProcessorBlockEntity extends BlockEntity {
                         (short)0xC402,  // li $4 0x02
                         (short)0xE4F0,  // sb $4 0($STACK)
                         (short)0x5424,  // mul $4 $2 $2     % $4 = $2 * $4
+                        (short)0x6200,  // div $2 $0 $0     % $2 = 0 / 0
                         (short)0x2010,  // Jumps to start of program ( RA = 0x0000 )
                     };
 

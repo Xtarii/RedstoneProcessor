@@ -75,12 +75,17 @@ public class IRP1608 extends RCore1608 {
             RAM[(i * 2) + 1] = low;
         }
 
+        //
+        // Error handler: Halt the processor
+        //
+
         RAM[STACK - 4] = (byte)0xCA;
         RAM[STACK - 3] = (byte)0x00;
         RAM[STACK - 2] = (byte)0xB0;
+        RAM[STACK - 1] = (byte)0x00;
 
         for(int i = 0; i < CSR.length; i++) {
-            CSR[i] = RAM[STACK - 4];
+            CSR[i] = STACK - 4;
         }
 
         GPR[15] = STACK - 5;    // Last byte in stack
@@ -219,6 +224,7 @@ public class IRP1608 extends RCore1608 {
 
                 if(GPR[PPR[2]] == 0x0) {
                     invokeError((byte)0x0);     // Division by 0
+                    return;
                 }
 
                 GMR[0] = (int)(GPR[PPR[1]] / GPR[PPR[2]]);  // GMRx0 = rA / rB
