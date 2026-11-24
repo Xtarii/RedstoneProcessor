@@ -57,12 +57,13 @@ not be modified.
 All modifiable traps are stored at `0x10` and above. To call them
 add `0x10` to their codes.
 
-| CSR (+0x10) | Code (*Error)   |
-|-------------|-----------------|
-|    0x0      | *NULL           |
-|    0x1      | *STACK OVERFLOW |
-|    0xF      | *Func not found |
-|:-----------:|:---------------:|
+| CSR (+0x10) |  Code (*Error)   |
+|-------------|------------------|
+|    0x0      | *NULL            |
+|    0x1      | *STACK OVERFLOW  |
+|    0xE      | *Invalid Address |
+|    0xF      | *Func not found  |
+|:-----------:|:----------------:|
 
 
 

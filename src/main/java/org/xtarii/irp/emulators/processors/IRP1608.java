@@ -106,6 +106,12 @@ public class IRP1608 extends RCore1608 {
         if(tick == 6) {
             PPR[0] = (short)(SPR[1] & 0x0FFF);  // PPRx0 = JMP address
         } else if(tick == 7) {
+
+            if(PPR[0] % 2 != 0) {
+                invokeError((byte)0xE);
+                return;
+            }
+
             SPR[0] = PPR[0];    // NPC = PPRx0
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
@@ -123,6 +129,12 @@ public class IRP1608 extends RCore1608 {
         if(tick == 6) {
             PPR[0] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx0 = rB
         } else if(tick == 7) {
+
+            if(GPR[PPR[0]] % 2 != 0) {
+                invokeError((byte)0xE);
+                return;
+            }
+
             SPR[0] = GPR[PPR[0]];   // NPC = rB
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
