@@ -94,6 +94,8 @@ add `0x10` to their codes.
 |    0xE      | *Invalid Address |
 |    0xF      | *Func not found  |
 |:-----------:|:----------------:|
+| 0x10 - 0xEF | Custom functions |
+|:-----------:|:----------------:|
 
 
 
