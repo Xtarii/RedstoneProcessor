@@ -127,7 +127,7 @@ public class IRP1608 extends RCore1608 {
 
     private void jumpRegister(byte tick) {
         if(tick == 6) {
-            PPR[0] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx0 = rB
+            PPR[0] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx0 = rA
         } else if(tick == 7) {
 
             if(GPR[PPR[0]] % 2 != 0) {
@@ -135,7 +135,7 @@ public class IRP1608 extends RCore1608 {
                 return;
             }
 
-            SPR[0] = GPR[PPR[0]];   // NPC = rB
+            SPR[0] = GPR[PPR[0]];   // NPC = rA
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
         }
@@ -260,11 +260,11 @@ public class IRP1608 extends RCore1608 {
 
     private void leftShift(byte tick) {
         if(tick == 5) {
-            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rA
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rR
         } else if(tick == 6) {
-            PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rB
+            PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
         } else if(tick == 7 && PPR[0] != 0x0) {
-            GPR[PPR[0]] = (short)(GPR[PPR[1]] << (SPR[1] & 0x000F));    // rA = rB << x
+            GPR[PPR[0]] = (short)(GPR[PPR[1]] << (SPR[1] & 0x000F));    // rR = rA << x
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
         }
@@ -272,11 +272,11 @@ public class IRP1608 extends RCore1608 {
 
     private void rightShift(byte tick) {
         if(tick == 5) {
-            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rA
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rR
         } else if(tick == 6) {
-            PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rB
+            PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
         } else if(tick == 7 && PPR[0] != 0x0) {
-            GPR[PPR[0]] = (short)(GPR[PPR[1]] >> (SPR[1] & 0x000F));    // rA = rB >> x
+            GPR[PPR[0]] = (short)(GPR[PPR[1]] >> (SPR[1] & 0x000F));    // rR = rA >> x
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
         }
@@ -304,6 +304,12 @@ public class IRP1608 extends RCore1608 {
             PPR[2] = (short)(SPR[1] & 0x000F);          // PPRx2 = rB
         } else if(tick == 8) {
             if((GPR[PPR[1]] & 0x0000FFFF) < (GPR[PPR[2]] & 0x0000FFFF)) {
+
+                if(GPR[PPR[0]] % 2 != 0) {
+                    invokeError((byte)0xE);
+                    return;
+                }
+
                 SPR[0] = GPR[PPR[0]]; // NPC = address
             }
 
@@ -313,11 +319,11 @@ public class IRP1608 extends RCore1608 {
 
     private void loadImmediate(byte tick) {
         if(tick == 5) {
-            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8); // PPRx0 = rB
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8); // PPRx0 = rR
         } else if(tick == 6) {
             PPR[1] = (short)(SPR[1] & 0x00FF);  // PPRx1 = immediate
         } else if(tick == 7 && PPR[0] != 0x0) {
-            GPR[PPR[0]] = PPR[1];   // rB = immediate
+            GPR[PPR[0]] = PPR[1];   // rR = immediate
         } else if(tick == 8) {
             SPR[2] = SPR[0];    // PPC = NPC
         }
@@ -325,7 +331,7 @@ public class IRP1608 extends RCore1608 {
 
     private void loadByte(byte tick) {
         if(tick == 5) {
-            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rB
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rR
         } else if(tick == 6) {
             PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
         } else if(tick == 7 && PPR[0] != 0x0) {
@@ -346,7 +352,7 @@ public class IRP1608 extends RCore1608 {
 
     private void storeByte(byte tick) {
         if(tick == 5) {
-            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rB
+            PPR[0] = (short)((SPR[1] & 0x0F00) >> 8);   // PPRx0 = rR
         } else if(tick == 6) {
             PPR[1] = (short)((SPR[1] & 0x00F0) >> 4);   // PPRx1 = rA
         } else if(tick == 7) {

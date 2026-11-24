@@ -5,43 +5,72 @@ The IRP 1608 is a simple 16 bit processor. It is often regarded as the
 reason Steve lost the moon race during the cold war.
 
 IRP 1608 is a 16 bit, 8 tick processor with an instruction set of 16
-instructions in total.
+instructions in total. All arithmetic operations are unsigned and all
+data is treated as unsigned by the processor.
 
 | Instruction | OP code |    Data     |       Description       |
 | ----------- | ------- | ----------- | ----------------------- |
-| Jump        | 0x0     | A = 0x0FFF  | Jumps to the designated |
+| Jump        | 0x0     | A  = 0x0FFF | Jumps to the designated |
 |             |         |             | address [ 0:12 ]        |
 | :---------: | :-----: | :---------: | :---------------------: |
-| Jump and    | 0x1     | A = 0x0FFF  | Jumps to the designated |
+| Jump and    | 0x1     | A  = 0x0FFF | Jumps to the designated |
 | link        |         |             | address [ 0:12 ] and    |
 |             |         |             | stores the jumper in $1 |
 | :---------: | :-----: | :---------: | :---------------------: |
-| Jump        | 0x2     | rB = 0x00F0 | Jumps to the address    |
-| register    |         |             | stored in register `rB` |
+| Jump        | 0x2     | rA = 0x00F0 | Jumps to the address    |
+| register    |         |             | stored in register `rA` |
 | :---------: | :-----: | :---------: | :---------------------: |
-| Add         | 0x3     | rR = 0x0F00 | Adds two integers       |
-|             |         | rA = 0x00F0 | together (unsigned)     |
-|             |         | rB = 0x000F | and stores the result   |
-|             |         |             | in register `rR`        |
+| Add         | 0x3     | rR = 0x0F00 | Adds `rA` with `rB`     |
+|             |         | rA = 0x00F0 | together and stores     |
+|             |         | rB = 0x000F | the result in `rR`      |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Subtract    | 0x4     | rR = 0x0F00 | Subtracts `rB` from     |
+|             |         | rA = 0x00F0 | `rA` and stores the     |
+|             |         | rB = 0x000F | result in `rR`          |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Multiply    | 0x5     | rR = 0x0F00 | Multiplies `rA` with    |
+|             |         | rA = 0x00F0 | `rB` and stores the     |
+|             |         | rB = 0x000F | result in `rR`          |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Divide      | 0x6     | rR = 0x0F00 | Divides `rA` with `rB`  |
+|             |         | rA = 0x00F0 | and the result is       |
+|             |         | rB = 0x000F | stored in `rR`          |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Left shift  | 0x7     | rR = 0x0F00 | Shifts `A` bits in `rA` |
+|             |         | rA = 0x00F0 | left and stores it in   |
+|             |         | A  = 0x000F | the register `rR`       |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Right shift | 0x8     | rR = 0x0F00 | Shifts `A` bits in `rA` |
+|             |         | rA = 0x00F0 | right and stores it in  |
+|             |         | A  = 0x000F | the register `rR`       |
+| :---------: | :-----: | :---------: | :---------------------: |
+| NAND        | 0x9     | rR = 0x0F00 | Preforms NAND on `rA`   |
+|             |         | rA = 0x00F0 | and `rB` and stores the |
+|             |         | rB = 0x000F | result in registry `rR` |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Branch less | 0xA     | rR = 0x0F00 | If `rA` is less than    |
+| than        |         | rA = 0x00F0 | `rB` this will jump to  |
+|             |         | rB = 0x000F | the address in `rR`     |
+| :---------: | :-----: | :---------: | :---------------------: |
+| System call | 0xB     |             | Preforms a system call  |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Load        | 0xC     | rR = 0x0F00 | Loads the immediate     |
+| immediate   |         | im = 0x00FF | `im` into `rR`          |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Load byte   | 0xD     | rR = 0x0F00 | Loads byte into `rR`    |
+|             |         | rA = 0x00F0 | from the address `rA`   |
+|             |         | of = 0x000F | with offset `of`        |
+| :---------: | :-----: | :---------: | :---------------------: |
+| Store byte  | 0xE     | rR = 0x0F00 | Stores the byte in `rR` |
+|             |         | rA = 0x00F0 | lower half at the       |
+|             |         | of = 0x000F | address in `rA` with an |
+|             |         |             | offset of `of`          |
+| :---------: | :-----: | :---------: | :---------------------: |
+| No          | 0xF     |             | Does nothing,           |
+| operation   |         |             | and increases PPC       |
 | :---------: | :-----: | :---------: | :---------------------: |
 
 
-inst[0x4] = this::subtract;
-inst[0x5] = this::multiply;
-inst[0x6] = this::divide;
-
-inst[0x7] = this::leftShift;
-inst[0x8] = this::rightShift;
-inst[0x9] = this::nand;
-
-inst[0xA] = this::branchLessThan;
-inst[0xB] = this::invokeSystemCall;
-
-inst[0xC] = this::loadImmediate;
-inst[0xD] = this::loadByte;
-inst[0xE] = this::storeByte;
-
-inst[0xF] = this::nop;
 
 Functions are stored as `0x0 - 0xFF` and may be invoked
 as pleased by the programmer.
