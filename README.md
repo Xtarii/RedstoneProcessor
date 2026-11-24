@@ -98,6 +98,34 @@ add `0x10` to their codes.
 |:-----------:|:----------------:|
 
 
+Registers are split up into different types. Some are used by the processor
+and are therefore only available to the processor while others are considered
+public registers. Such registers are the *GPR* or *general purpose registers*.
+
+| Register ( GPR ) |    Description    |
+| ---------------- | ----------------- |
+| $0, $zero        | Always `0`        |
+|:----------------:|:-----------------:|
+| $1, $ra          | Return address    |
+|:----------------:|:-----------------:|
+| $2-$5, $t0-$t4   | Temporary         |
+|:----------------:|:-----------------:|
+| $6-$9, $s0-$s4   | These contains    |
+|                  | the same value    |
+|                  | before and after  |
+|                  | a subroutine call |
+|:----------------:|:-----------------:|
+| $10, $v0         | Return value      |
+|:----------------:|:-----------------:|
+| $11-$13, $a0-$a2 | Argument 0-2      |
+|:----------------:|:-----------------:|
+| $14, $fp         | Extra, may be     |
+|                  | used for graphics |
+|:----------------:|:-----------------:|
+| $15, $sp         | Stack pointer     |
+|:----------------:|:-----------------:|
+
+
 
 Run
 =======
