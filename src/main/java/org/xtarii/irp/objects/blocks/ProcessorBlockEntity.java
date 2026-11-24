@@ -133,31 +133,19 @@ public class ProcessorBlockEntity extends BlockEntity {
                 if(!processor.getPower()) {
 
                     short[] program = {
-                        (short)0xF000,
-                        (short)0xC0FF,  // li $0 0xFF       % Should fail
-                        (short)0xC208,  // li $2 0x08
-                        (short)0xC402,  // li $4 0x02
-                        (short)0xE4F0,  // sb $4 0($STACK)
-                        (short)0x5424,  // mul $4 $2 $2     % $4 = $2 * $4
+                        (short)0xC305,  // li $t1 0x5
+                        (short)0xC200,  // li $t0 0x0
+                        (short)0xC60A,  // li $s0 0xA
+                        (short)0xA623,  // blt $s0 $t0 $t1
 
-                        (short)0xCB01,  // li $a0 0x1
-                        (short)0xCA01,  // li $v0 0x1
-                        (short)0xB000,  // sys              % Error: Stack overflow
+                        (short)0x0010,  // jmp 0x010
 
-                        (short)0xC201,  // li $2 0x01
-                        (short)0x7221,  // ls $2 $2 1       % $2 = $2 << 1
-                        (short)0x8221,  // rs $2 $2 1       % $2 = $2 >> 1
+                        (short)0xC401,  // li $t2 0x1
+                        (short)0x3224,  // add $t0 $t0 $t2
+                        (short)0x0006,  // jmp 0x004
 
-                        (short)0x9222,  // nand $2 $2 $2
-
-                        (short)0xA102,  // blt $ra $0 $2    % if(0 < $2) ...
-
-                        // (short)0x6200,  // div $2 $0 $0     % $2 = 0 / 0
-
-                        // (short)0xCA10,  // li $a0 0x10      % Error trap
-                        // (short)0xB000,  // sys              & Invoke
-
-                        (short)0x2010,  // Jumps to start of program ( RA = 0x0000 )
+                        (short)0xCA00,  // li $v0 0x0
+                        (short)0xB000,  // sys
                     };
 
                     processor.emulator.load(program);
