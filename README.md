@@ -49,9 +49,10 @@ as pleased by the programmer.
 The first `0x0 - 0xF` are built in processor functions and can
 not be modified.
 
-| CSR |   Code   |
-|-----|----------|
-| 0x0 | Halt     |
+| CSR |   Code   | Parameters |
+|-----|----------|------------|
+| 0x0 | Halt     |            |
+| 0x1 | Error    | a0, error  |
 
 
 All modifiable traps are stored at `0x10` and above. To call them
