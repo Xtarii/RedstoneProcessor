@@ -124,6 +124,7 @@ public abstract class RCore1608 {
 
         // System instructions
         SYS[0x0] = this::halt;
+        SYS[0x1] = this::error;
 
         state = State.FETCH;
         tick = 1;
@@ -236,6 +237,22 @@ public abstract class RCore1608 {
     }
 
 
+
+    /**
+     * Processor runtime error invocator.
+     * <p>
+     * Allows a program to throw an
+     * error.
+     */
+    private void error(byte tick) {
+        byte error = (byte)((GPR[0xB] & 0x00FF) >> 8);
+
+        if(error <= 0xF) {
+            invokeError(error);
+        } else {
+            invokeError((byte)0xF);
+        }
+    }
 
     /**
      * Resets processor tick
