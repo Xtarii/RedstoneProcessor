@@ -245,7 +245,7 @@ public abstract class RCore1608 {
      * error.
      */
     private void error(byte tick) {
-        byte error = (byte)((GPR[0xB] & 0x00FF) >> 8);
+        byte error = (byte)(GPR[0xB] & 0x000F);
 
         if(error <= 0xF) {
             invokeError(error);

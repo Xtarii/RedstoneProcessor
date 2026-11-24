@@ -140,6 +140,10 @@ public class ProcessorBlockEntity extends BlockEntity {
                         (short)0xE4F0,  // sb $4 0($STACK)
                         (short)0x5424,  // mul $4 $2 $2     % $4 = $2 * $4
 
+                        (short)0xCB01,  // li $a0 0x1
+                        (short)0xCA01,  // li $v0 0x1
+                        (short)0xB000,  // sys              % Error: Stack overflow
+
                         (short)0xC201,  // li $2 0x01
                         (short)0x7221,  // ls $2 $2 1       % $2 = $2 << 1
                         (short)0x8221,  // rs $2 $2 1       % $2 = $2 >> 1
