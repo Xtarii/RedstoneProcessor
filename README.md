@@ -127,6 +127,26 @@ public registers. Such registers are the *GPR* or *general purpose registers*.
 |:----------------:|:-----------------:|
 
 
+A simple program that loops five times and exits without any error
+by simply calling `halt`
+
+```asm
+0xC305  // li $t1 0x5
+0xC200  // li $t0 0x0
+0xC60A  // li $s0 0xA
+0xA623  // blt $s0 $t0 $t1
+
+0x0010  // jmp 0x010
+
+0xC401  // li $t2 0x1
+0x3224  // add $t0 $t0 $t2
+0x0006  // jmp 0x004
+
+0xCA00  // li $v0 0x0
+0xB000  // sys
+```
+
+
 
 Run
 =======
