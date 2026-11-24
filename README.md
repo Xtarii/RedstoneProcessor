@@ -53,6 +53,7 @@ data is treated as unsigned by the processor.
 |             |         | rB = 0x000F | the address in `rR`     |
 | :---------: | :-----: | :---------: | :---------------------: |
 | System call | 0xB     |             | Preforms a system call  |
+|             |         |             | to the function in `v0` |
 | :---------: | :-----: | :---------: | :---------------------: |
 | Load        | 0xC     | rR = 0x0F00 | Loads the immediate     |
 | immediate   |         | im = 0x00FF | `im` into `rR`          |
