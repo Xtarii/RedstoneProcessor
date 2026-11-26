@@ -136,13 +136,13 @@ by simply calling `halt`
 0xC60A  // li $s0 0xA
 0xA623  // blt $s0 $t0 $t1
 
-0x0010  // jmp 0x010
+0x0010  // jmp 0x010        % Jumps to `0xCA00` or to address `16` in RAM
 
 0xC401  // li $t2 0x1
 0x3224  // add $t0 $t0 $t2
-0x0006  // jmp 0x004
+0x0006  // jmp 0x004        % Jumps to `0xC60A` or to address `4` in RAM
 
-0xCA00  // li $v0 0x0
+0xCA00  // li $v0 0x0       % Halts ( Exit without any error )
 0xB000  // sys
 ```
 
